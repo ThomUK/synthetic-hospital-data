@@ -1,12 +1,6 @@
 {
-  "published_version": "v1",
+  "published_version": "v2",
   "published_build": "2026-10-21",
-  "note": "The generator has moved on since v1 was built. These changes are in the code but not in the published data; the dataset will be regenerated as v2 when the list is complete.",
-  "changes": [
-    "Beds reference table (reference/beds): one row per bed space with bed_type bed, recliner, trolley or chair. The published ADT events still carry random Bay<n>-<nn> labels that are not drawn from it.",
-    "NHS numbers keep the fake_ prefix under every formatting variant (M-ED-07 now gives fake_410 897 3682, not 410 897 3682). About 2% of the published ED rows still carry the unprefixed form.",
-    "Duplicate registrations (M-PAS-07/08) drew their second MRN from the same range as real MRNs, so 460 MRNs in the published data belong to two people and the derived spells, episodes, stays, appointments and pathways carry duplicate rows for them. Fixed in the generator.",
-    "Clinic code generation ran past Z for specialties with more than 26 clinics, producing the duplicate code 1300NA. Two-letter suffixes now.",
-    "reference/patient_source_setting codes lost their leading zero (1 instead of 01), so they never matched the RIS values. Read as text now."
-  ]
+  "note": "The generator has moved on since v2 was built. These changes are in the code but not in the published data; the dataset will be regenerated as the next version when the list is complete.",
+  "changes": []
 }

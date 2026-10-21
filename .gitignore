@@ -1,0 +1,2 @@
+generator/__pycache__/
+*.duckdb

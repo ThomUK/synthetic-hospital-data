@@ -1,9 +1,9 @@
 # Synthetic Hospital Data
 
-**Status: v1 published.** (Moved from `ThomUK/claude-scratchpad`, where it
-lived under `synthetic-hospital-datastructure/`; the v1 release there is
-superseded by the one in this repository.) The sample is in `data/v1/`, the full set is on
-the [v1 release](https://github.com/ThomUK/synthetic-hospital-data/releases/tag/v1),
+![Fake NHS Trust: a glass hospital with floating table schemas and charts](docs/images/fake-nhs-trust.png)
+
+**Status: v2 published.** The sample is in `data/v2/`, the full set is on
+the [v2 release](https://github.com/ThomUK/synthetic-hospital-data/releases/tag/v2),
 and the [project page](https://thomuk.github.io/synthetic-hospital-data/)
 [table viewer](https://thomuk.github.io/synthetic-hospital-data/viewer/)
 and [ERDs](https://thomuk.github.io/synthetic-hospital-data/erd/) are live. The browser SQL console and the R helper package are still to come.

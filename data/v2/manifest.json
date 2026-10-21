@@ -1,0 +1,1235 @@
+{
+ "dataset": "Fake NHS Trust synthetic hospital data",
+ "version": "v2",
+ "generator": {
+  "dataset": "Fake NHS Trust synthetic hospital data",
+  "layer": 1,
+  "version": "v1",
+  "seed": 20230401,
+  "n_patients": 800000,
+  "start": "2023-04-01",
+  "end": "2026-03-31",
+  "generated_at": "2026-10-21T20:45:30Z",
+  "mess": "default_mess_rates",
+  "row_counts": {
+   "pas_patients": 805246,
+   "pas_adt_events": 2723991,
+   "ed_attendances": 795950,
+   "ed_status_log": 3396550,
+   "pas_referrals": 2096135,
+   "pas_outpatient_appointments": 6261732,
+   "ris_imaging": 968727,
+   "endo_procedures": 71649,
+   "pas_op_status_log": 21702836,
+   "mess_log": 2381345,
+   "ref_sites": 2,
+   "ref_wards": 55,
+   "ref_beds": 1342,
+   "ref_specialties": 20,
+   "ref_consultants": 428,
+   "ref_clinics": 203,
+   "ref_exam_catalogue": 41,
+   "ref_admission_method": 11,
+   "ref_admission_source": 5,
+   "ref_discharge_destination": 7,
+   "ref_discharge_method": 4,
+   "ref_attendance_status": 6,
+   "ref_patient_source_setting": 7,
+   "ref_ecds_codes": 277,
+   "truth_spells": 771948,
+   "truth_stays": 955495,
+   "truth_ed_admitted": 795950,
+   "truth_imaging_links": 933561,
+   "truth_endoscopy_links": 70250,
+   "truth_mrn_aliases": 5246
+  }
+ },
+ "built_at": "2026-10-21T20:49:26Z",
+ "window": {
+  "start": "2023-04-01",
+  "end": "2026-03-31"
+ },
+ "timestamps": "UTC, whole seconds; see docs/MESS-CATALOGUE.md M-X-02 for the clock offsets inside the data",
+ "layout": {
+  "full": "every row",
+  "sample": "5% of patients (by hash of the surviving MRN) with all of their rows in every table; derived and aggregate layers recomputed on the sample"
+ },
+ "full": {
+  "layer1/pas_patients": {
+   "rows": 805246,
+   "files": [
+    {
+     "path": "v2/full/layer1/pas_patients.parquet",
+     "bytes": 18506808,
+     "sha256": "c0ae647c43394f8a7c92ecefb7704c9d3663ecea5103ade8028a51e3708bd8e8"
+    }
+   ]
+  },
+  "layer1/pas_adt_events": {
+   "rows": 2723991,
+   "files": [
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2015.parquet",
+     "bytes": 2669,
+     "sha256": "016dd4693527f884a434c43d9cb13c658590669f11e271cbf6115c95397ab49a"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2016.parquet",
+     "bytes": 2669,
+     "sha256": "af351af732aa56d91731c93e04dc30e6ebc62e2d29d6563849c198dc9ce80b2e"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2018.parquet",
+     "bytes": 2756,
+     "sha256": "16d30176efe8e80c74f1f319a4b8ac0a117fff27acd22fce3615af3c822f91d0"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2019.parquet",
+     "bytes": 3053,
+     "sha256": "302204d8cd9fafb3f26348bdbe35c8c2eea1ec1540a182210f686647530fb974"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2020.parquet",
+     "bytes": 4161,
+     "sha256": "e277657f9a39622570780f8f879b0292db95e29be2cbdd98c70c9b60694cac08"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2021.parquet",
+     "bytes": 10336,
+     "sha256": "fbc16c8a5b6f2bd7cbeb825a650deebdb261aa94047f4b7f2315ae485095c956"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2022.parquet",
+     "bytes": 542112,
+     "sha256": "32983ab06920ae86f47cda44271e451f66275c1900979d687d3ef67959da88bf"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2023.parquet",
+     "bytes": 18772364,
+     "sha256": "ca5931ba56f7e9fe4b697ededa42a7e60e282c62c664185b3c77f35869fe0f77"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2024.parquet",
+     "bytes": 19136917,
+     "sha256": "9f3ab8e3e6e499f87518e2548719962c33a6a4962e69fcdefc8e201ea1e6b185"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2025.parquet",
+     "bytes": 18689231,
+     "sha256": "1de681cbd302031204c0a4e04726d82ce073eb4e91ff3db7b94766d8c6b44e9b"
+    },
+    {
+     "path": "v2/full/layer1/pas_adt_events/fy2026.parquet",
+     "bytes": 11812,
+     "sha256": "1f3f39cd9f4c40d2154f777d9012da4158fd298ac10c3f588b77d33359655767"
+    }
+   ]
+  },
+  "layer1/ed_attendances": {
+   "rows": 795950,
+   "files": [
+    {
+     "path": "v2/full/layer1/ed_attendances.parquet",
+     "bytes": 30454132,
+     "sha256": "b2375cc31e1753ea26cd8d0187225e3115235fae2a1fc4534540848ddd5ae7e0"
+    }
+   ]
+  },
+  "layer1/ed_status_log": {
+   "rows": 3396550,
+   "files": [
+    {
+     "path": "v2/full/layer1/ed_status_log/fy2023.parquet",
+     "bytes": 8666558,
+     "sha256": "1dd1d99363bbb52e7aaf290136776efd3480e891d5712b4244a3b0c46568689c"
+    },
+    {
+     "path": "v2/full/layer1/ed_status_log/fy2024.parquet",
+     "bytes": 8817771,
+     "sha256": "21883566b3b5854e57546a41db0be7685fde8c673d69672656d5a5e4ea128456"
+    },
+    {
+     "path": "v2/full/layer1/ed_status_log/fy2025.parquet",
+     "bytes": 8999747,
+     "sha256": "fe68c9566f6db50843c1d9a6244f13ced749dc2cb3c179008518155d6788b768"
+    },
+    {
+     "path": "v2/full/layer1/ed_status_log/fy2026.parquet",
+     "bytes": 3348,
+     "sha256": "a4225192ff48810a4fd3363032af674fc977b00ef86d9b7066ada90490a6a846"
+    }
+   ]
+  },
+  "layer1/pas_referrals": {
+   "rows": 2096135,
+   "files": [
+    {
+     "path": "v2/full/layer1/pas_referrals/fy2022.parquet",
+     "bytes": 3189360,
+     "sha256": "8a3a8d88ba423fb19b8c23b933ec84bcbb0099114efe0c48c4e5a057be3a2300"
+    },
+    {
+     "path": "v2/full/layer1/pas_referrals/fy2023.parquet",
+     "bytes": 4290342,
+     "sha256": "69deb46e8d37effa5d5b4f634c1fc1469e1fac47b7e9a1ff32c724841ebc6115"
+    },
+    {
+     "path": "v2/full/layer1/pas_referrals/fy2024.parquet",
+     "bytes": 4326832,
+     "sha256": "63cbab6486457cc69996c0b9a14710d6eee46e77ea7609fbf6a48b985ff042d9"
+    },
+    {
+     "path": "v2/full/layer1/pas_referrals/fy2025.parquet",
+     "bytes": 4246337,
+     "sha256": "9a74dfb1974e5ef04a4d20ccb6aa248e90985a3192da1d40262bd716b40e6c2d"
+    }
+   ]
+  },
+  "layer1/pas_outpatient_appointments": {
+   "rows": 6261732,
+   "files": [
+    {
+     "path": "v2/full/layer1/pas_outpatient_appointments/fy2022.parquet",
+     "bytes": 4030715,
+     "sha256": "92abe8ac21c4a7aa1cc9984e6f5c268d151caa1ae8cc3410055b90120d4c4848"
+    },
+    {
+     "path": "v2/full/layer1/pas_outpatient_appointments/fy2023.parquet",
+     "bytes": 33132813,
+     "sha256": "2cba1bf20cabad14752598204eac257576f5ab56bd4bc9eb8d7355197031a876"
+    },
+    {
+     "path": "v2/full/layer1/pas_outpatient_appointments/fy2024.parquet",
+     "bytes": 40203604,
+     "sha256": "5f88515084bf1bdf2b8e7c8428e52177bf4046961f65ae34aba7d8ed5d9665c9"
+    },
+    {
+     "path": "v2/full/layer1/pas_outpatient_appointments/fy2025.parquet",
+     "bytes": 39874887,
+     "sha256": "32cb43464e99d2ed8c0b916948e4890942f3e517d6881a000a9f0fb349fbe736"
+    }
+   ]
+  },
+  "layer1/pas_op_status_log": {
+   "rows": 21702836,
+   "files": [
+    {
+     "path": "v2/full/layer1/pas_op_status_log/fy2020.parquet",
+     "bytes": 1687,
+     "sha256": "f5416062703d21b0e125de4471655306c6994a5d02906ea7ac1d41efa81e626e"
+    },
+    {
+     "path": "v2/full/layer1/pas_op_status_log/fy2021.parquet",
+     "bytes": 3672,
+     "sha256": "2b94c2d573acdf23eecf2a271b6202584eac5461c79a34d6ae83812ecdb70e05"
+    },
+    {
+     "path": "v2/full/layer1/pas_op_status_log/fy2022.parquet",
+     "bytes": 8797872,
+     "sha256": "f2787160c758d204a75c4db173bc46e51076e964f5383ceea051c7878bbd2f1a"
+    },
+    {
+     "path": "v2/full/layer1/pas_op_status_log/fy2023.parquet",
+     "bytes": 67607290,
+     "sha256": "c6dbb3c3cd62df93e112f0951831fb7571228f6bb7ebc7b6986019057df37368"
+    },
+    {
+     "path": "v2/full/layer1/pas_op_status_log/fy2024.parquet",
+     "bytes": 80915518,
+     "sha256": "e85c5d841397e77359a8805054cba3e9be289c081667fa3d3e650ed83bab7e22"
+    },
+    {
+     "path": "v2/full/layer1/pas_op_status_log/fy2025.parquet",
+     "bytes": 79789115,
+     "sha256": "681520db2c04f906fdbc4b2014791937d16eb6ad741d87e200b58cf24c70e1e4"
+    }
+   ]
+  },
+  "layer1/ris_imaging": {
+   "rows": 968727,
+   "files": [
+    {
+     "path": "v2/full/layer1/ris_imaging.parquet",
+     "bytes": 60193879,
+     "sha256": "a1f17054f0577b5a7f3af566a1557cbe5d90fd587b2df5bafea70bbd72c682c3"
+    }
+   ]
+  },
+  "layer1/endo_procedures": {
+   "rows": 71649,
+   "files": [
+    {
+     "path": "v2/full/layer1/endo_procedures.parquet",
+     "bytes": 1917146,
+     "sha256": "f5b4626f37b991bee9dd5836e0b7fd5a15a1112d423f506e57baa952f71e32cc"
+    }
+   ]
+  },
+  "reference/admission_method": {
+   "rows": 11,
+   "files": [
+    {
+     "path": "v2/full/reference/admission_method.parquet",
+     "bytes": 834,
+     "sha256": "26f446d89d5ed7f953ba3a654d6c463f5efa9c0c637443413719b7298dd5cca6"
+    }
+   ]
+  },
+  "reference/admission_source": {
+   "rows": 5,
+   "files": [
+    {
+     "path": "v2/full/reference/admission_source.parquet",
+     "bytes": 514,
+     "sha256": "193126fc98bece81de587efc38278a5affc211d5c30e1c237a1cbb2acd10e6de"
+    }
+   ]
+  },
+  "reference/attendance_status": {
+   "rows": 6,
+   "files": [
+    {
+     "path": "v2/full/reference/attendance_status.parquet",
+     "bytes": 789,
+     "sha256": "3524008e71c468b91ca7520f91df618d2670175d076430351d5f4cefdb9de1a1"
+    }
+   ]
+  },
+  "reference/beds": {
+   "rows": 1342,
+   "files": [
+    {
+     "path": "v2/full/reference/beds.parquet",
+     "bytes": 4815,
+     "sha256": "04f1d8467ec9c5212024b35b09e1c2c5a9adc27e7ceaf99a0a1b20ee096a7705"
+    }
+   ]
+  },
+  "reference/clinics": {
+   "rows": 203,
+   "files": [
+    {
+     "path": "v2/full/reference/clinics.parquet",
+     "bytes": 1115,
+     "sha256": "5c75d613004d546d8c46a4be08f7820744443b489d14bbd104a8f1ce4aade10e"
+    }
+   ]
+  },
+  "reference/consultants": {
+   "rows": 428,
+   "files": [
+    {
+     "path": "v2/full/reference/consultants.parquet",
+     "bytes": 2662,
+     "sha256": "bc1162b0377c5d1d40fb789472eeea44aba37f680cf4d5bcb11b940d0078000c"
+    }
+   ]
+  },
+  "reference/discharge_destination": {
+   "rows": 7,
+   "files": [
+    {
+     "path": "v2/full/reference/discharge_destination.parquet",
+     "bytes": 551,
+     "sha256": "9afb70e386d6fa157d050a318aa921b33effc229c30aae39b0a2e1e1424bc1dd"
+    }
+   ]
+  },
+  "reference/discharge_method": {
+   "rows": 4,
+   "files": [
+    {
+     "path": "v2/full/reference/discharge_method.parquet",
+     "bytes": 571,
+     "sha256": "8bf3041a697b06372d2871a4ba73cfe7a832e05ad6897ca99acb043f4f178f65"
+    }
+   ]
+  },
+  "reference/ecds_codes": {
+   "rows": 277,
+   "files": [
+    {
+     "path": "v2/full/reference/ecds_codes.parquet",
+     "bytes": 6183,
+     "sha256": "0882314edadf4e288125268ad0041d6fdd86a24846bf7cf0ed85acf5e49f1e1c"
+    }
+   ]
+  },
+  "reference/exam_catalogue": {
+   "rows": 41,
+   "files": [
+    {
+     "path": "v2/full/reference/exam_catalogue.parquet",
+     "bytes": 3622,
+     "sha256": "ef99741d2fad64b7870b73e5843dac64cd998c33a995acc9e56cf8fec6d6adf3"
+    }
+   ]
+  },
+  "reference/patient_source_setting": {
+   "rows": 7,
+   "files": [
+    {
+     "path": "v2/full/reference/patient_source_setting.parquet",
+     "bytes": 548,
+     "sha256": "3860fb62ee4e1a03fc9ab2270b5f6f04deeabce7833be613b606bab9918f380d"
+    }
+   ]
+  },
+  "reference/sites": {
+   "rows": 2,
+   "files": [
+    {
+     "path": "v2/full/reference/sites.parquet",
+     "bytes": 655,
+     "sha256": "dbfff7deae0e0e56b7aba6180aaafe184118baa9958fbd685bd10c50d363a428"
+    }
+   ]
+  },
+  "reference/specialties": {
+   "rows": 20,
+   "files": [
+    {
+     "path": "v2/full/reference/specialties.parquet",
+     "bytes": 2280,
+     "sha256": "f501c2361d357edfc318cfb2ffc6a736c6af3467fcbd05090e179fc839d53446"
+    }
+   ]
+  },
+  "reference/wards": {
+   "rows": 55,
+   "files": [
+    {
+     "path": "v2/full/reference/wards.parquet",
+     "bytes": 1903,
+     "sha256": "ec7f7fc9e3e56772d490e7dca4d43dbc43f00681b5a2f908491f9ee718263552"
+    }
+   ]
+  },
+  "derived/ed_attendances": {
+   "rows": 795950,
+   "files": [
+    {
+     "path": "v2/full/derived/ed_attendances.parquet",
+     "bytes": 43129234,
+     "sha256": "d3e76116c039f795ee05eba1c0061352a3d5622b84c48f3468c9b47fd2219648"
+    }
+   ]
+  },
+  "derived/endoscopy_procedures": {
+   "rows": 70250,
+   "files": [
+    {
+     "path": "v2/full/derived/endoscopy_procedures.parquet",
+     "bytes": 2680909,
+     "sha256": "6469c01e3412ee816d75d42beed89516eca259947f3cf94e943cede78b465416"
+    }
+   ]
+  },
+  "derived/episodes": {
+   "rows": 889232,
+   "files": [
+    {
+     "path": "v2/full/derived/episodes.parquet",
+     "bytes": 22663511,
+     "sha256": "177517b93937ff88b3b0a141b5a64d0eec6ec883a43edf2e1b375654714a010b"
+    }
+   ]
+  },
+  "derived/imaging_exams": {
+   "rows": 907909,
+   "files": [
+    {
+     "path": "v2/full/derived/imaging_exams.parquet",
+     "bytes": 63010496,
+     "sha256": "a53a2a00db48397feee7c0af549ac987e06a1709ee9195542c64d9432729cb13"
+    }
+   ]
+  },
+  "derived/mrn_map": {
+   "rows": 805246,
+   "files": [
+    {
+     "path": "v2/full/derived/mrn_map.parquet",
+     "bytes": 10577705,
+     "sha256": "aa1f8505adb17b5f1f1770de9e5ba0a346e352b8183f451ce3120da1267df4f8"
+    }
+   ]
+  },
+  "derived/op_appointments": {
+   "rows": 6261732,
+   "files": [
+    {
+     "path": "v2/full/derived/op_appointments.parquet",
+     "bytes": 184667097,
+     "sha256": "4194126514e94539c3fb8141f845011b9a52f2044acef7aa9974fe3cf131439b"
+    }
+   ]
+  },
+  "derived/patient_identifiers": {
+   "rows": 1563120,
+   "files": [
+    {
+     "path": "v2/full/derived/patient_identifiers.parquet",
+     "bytes": 13832476,
+     "sha256": "e1406b164876aed222ab92473d5a6b0e6e3677fb80f520e16116213b58769bcd"
+    }
+   ]
+  },
+  "derived/patients": {
+   "rows": 800530,
+   "files": [
+    {
+     "path": "v2/full/derived/patients.parquet",
+     "bytes": 26010229,
+     "sha256": "eeff39e148ca68b63b1ae8a4c1ecd399c1a45f893beb27ff572baf52bd3c16d5"
+    }
+   ]
+  },
+  "derived/ref_ward_names": {
+   "rows": 232,
+   "files": [
+    {
+     "path": "v2/full/derived/ref_ward_names.parquet",
+     "bytes": 3968,
+     "sha256": "de865738fb2d6a5411b5a6bdd21e1b7d09a4f49939274937ac7536f60c8882b1"
+    }
+   ]
+  },
+  "derived/rtt_pathways": {
+   "rows": 715447,
+   "files": [
+    {
+     "path": "v2/full/derived/rtt_pathways.parquet",
+     "bytes": 16676693,
+     "sha256": "c016e808859a93b90149a517e37cdf5a9bac51de2395de6dd6ebbefee0b7df27"
+    }
+   ]
+  },
+  "derived/spells": {
+   "rows": 764806,
+   "files": [
+    {
+     "path": "v2/full/derived/spells.parquet",
+     "bytes": 20227090,
+     "sha256": "400dfc782c28c05ee85c3aaf4cce7ac8c435fff20e7218b6fc970cddb7518ece"
+    }
+   ]
+  },
+  "derived/ward_stays": {
+   "rows": 966903,
+   "files": [
+    {
+     "path": "v2/full/derived/ward_stays.parquet",
+     "bytes": 22960499,
+     "sha256": "9158754e59c4b50e818e0eb43ff66e362de78f512a020b46815ffc74828ed3ee"
+    }
+   ]
+  },
+  "aggregate/ae_monthly": {
+   "rows": 72,
+   "files": [
+    {
+     "path": "v2/full/aggregate/ae_monthly.parquet",
+     "bytes": 3342,
+     "sha256": "bbc05bd54e96eaa025a917af87f72b1b0d0d8b45048583e726631f24f4c50766"
+    }
+   ]
+  },
+  "aggregate/apc_monthly": {
+   "rows": 2739,
+   "files": [
+    {
+     "path": "v2/full/aggregate/apc_monthly.parquet",
+     "bytes": 36443,
+     "sha256": "a865c598ddad1d1fafb8829fcb7f404fb17ec5581b04c70dfca5253118dc69ff"
+    }
+   ]
+  },
+  "aggregate/daily_flow": {
+   "rows": 30547,
+   "files": [
+    {
+     "path": "v2/full/aggregate/daily_flow.parquet",
+     "bytes": 121850,
+     "sha256": "985fd86917f5052717a3a4f7e85440cd1eed535b53a62ced246da920a7c1ae89"
+    }
+   ]
+  },
+  "aggregate/did_extract": {
+   "rows": 908031,
+   "files": [
+    {
+     "path": "v2/full/aggregate/did_extract.parquet",
+     "bytes": 22769590,
+     "sha256": "204107f4e457648a9dec6814c0284f55d2cd6aa451b7eb30b88889ef5a8a7f27"
+    }
+   ]
+  },
+  "aggregate/did_monthly": {
+   "rows": 700,
+   "files": [
+    {
+     "path": "v2/full/aggregate/did_monthly.parquet",
+     "bytes": 7409,
+     "sha256": "796439fd79b2901dd2e3ffb4b1e3b7f9424d36441d0a4c3006e91d0424777b75"
+    }
+   ]
+  },
+  "aggregate/dm01_snapshot": {
+   "rows": 252,
+   "files": [
+    {
+     "path": "v2/full/aggregate/dm01_snapshot.parquet",
+     "bytes": 9248,
+     "sha256": "9771426feb05e75fcc39217a5ec244d8d0e4618966245b1c7c4a12d1be4f9e13"
+    }
+   ]
+  },
+  "aggregate/endoscopy_monthly": {
+   "rows": 1193,
+   "files": [
+    {
+     "path": "v2/full/aggregate/endoscopy_monthly.parquet",
+     "bytes": 13525,
+     "sha256": "d5f775d2a2f82bb99933db2b943f8ac77eda3200175771fd3ad3e9b03eeee522"
+    }
+   ]
+  },
+  "aggregate/midnight_census": {
+   "rows": 57169,
+   "files": [
+    {
+     "path": "v2/full/aggregate/midnight_census.parquet",
+     "bytes": 52519,
+     "sha256": "2bc148e43c84786cb021213fcf6586648f2ad354c46a04ac079e9b54d102ed95"
+    }
+   ]
+  },
+  "aggregate/op_monthly": {
+   "rows": 1044,
+   "files": [
+    {
+     "path": "v2/full/aggregate/op_monthly.parquet",
+     "bytes": 16197,
+     "sha256": "41e1772b1670f064550ca9e7e308f130d90ace5b661eb945cf60db292147db46"
+    }
+   ]
+  },
+  "aggregate/rtt_incomplete": {
+   "rows": 648,
+   "files": [
+    {
+     "path": "v2/full/aggregate/rtt_incomplete.parquet",
+     "bytes": 9611,
+     "sha256": "2117518e31e840daaf85dd962c6e1236b17bb361c7ba71d29ebb1d6ecb10dd20"
+    }
+   ]
+  },
+  "answers/mess_log": {
+   "rows": 2381345,
+   "files": [
+    {
+     "path": "v2/full/answers/mess_log.parquet",
+     "bytes": 22144758,
+     "sha256": "0380fd38ab9adbb49d0edb67f4ea14e6a2de9d40c69ef21f912d90db689d31bb"
+    }
+   ]
+  },
+  "answers/truth/ed_admitted": {
+   "rows": 795950,
+   "files": [
+    {
+     "path": "v2/full/answers/truth/ed_admitted.parquet",
+     "bytes": 387189,
+     "sha256": "2a0ee9a21cd2b15bacd2c447eb3c4d085ec3a0fe123829e0fa7c86680cce493b"
+    }
+   ]
+  },
+  "answers/truth/endoscopy_links": {
+   "rows": 70250,
+   "files": [
+    {
+     "path": "v2/full/answers/truth/endoscopy_links.parquet",
+     "bytes": 269009,
+     "sha256": "284c5d8d2bd77602ed67eafc260f0f66133524a19327b77b15b496d1d90d5d5a"
+    }
+   ]
+  },
+  "answers/truth/imaging_links": {
+   "rows": 933561,
+   "files": [
+    {
+     "path": "v2/full/answers/truth/imaging_links.parquet",
+     "bytes": 5330941,
+     "sha256": "3171047bef08f7e828af7337b52b9c5995e640dc362f25b525b7db5cfc02bab9"
+    }
+   ]
+  },
+  "answers/truth/mrn_aliases": {
+   "rows": 5246,
+   "files": [
+    {
+     "path": "v2/full/answers/truth/mrn_aliases.parquet",
+     "bytes": 42373,
+     "sha256": "1f6cd6b6c6a6d01c32f69ded0b608195340970fb838fff94137bf27a2b49f6a4"
+    }
+   ]
+  },
+  "answers/truth/spells": {
+   "rows": 771948,
+   "files": [
+    {
+     "path": "v2/full/answers/truth/spells.parquet",
+     "bytes": 14469605,
+     "sha256": "d1291d8616d58541d71a2790b75c885faf6cf4187eac9af79eac521f47e12b6f"
+    }
+   ]
+  },
+  "answers/truth/stays": {
+   "rows": 955495,
+   "files": [
+    {
+     "path": "v2/full/answers/truth/stays.parquet",
+     "bytes": 11012126,
+     "sha256": "adf4d48d9429106a4146d3cb2b189e78801b3bf0bafc6e4040b4d105023dc9eb"
+    }
+   ]
+  }
+ },
+ "sample": {
+  "layer1/pas_patients": {
+   "rows": 40300,
+   "files": [
+    {
+     "path": "v2/sample/layer1/pas_patients.parquet",
+     "bytes": 962523,
+     "sha256": "ab0112183780fc14e281fc032296c064edbb7b1eb055808132d8cedf5e91d3db"
+    }
+   ]
+  },
+  "layer1/pas_adt_events": {
+   "rows": 137841,
+   "files": [
+    {
+     "path": "v2/sample/layer1/pas_adt_events.parquet",
+     "bytes": 3060870,
+     "sha256": "967d4c684cc428b414e1a4705fb46197b82a202ae75a769eaa6bf112e239a0cd"
+    }
+   ]
+  },
+  "layer1/ed_attendances": {
+   "rows": 40459,
+   "files": [
+    {
+     "path": "v2/sample/layer1/ed_attendances.parquet",
+     "bytes": 1741355,
+     "sha256": "4a8968255060ad71b445f32e4fb85dbfad0cb433dadfdf4790befca1e3898d96"
+    }
+   ]
+  },
+  "layer1/ed_status_log": {
+   "rows": 172721,
+   "files": [
+    {
+     "path": "v2/sample/layer1/ed_status_log.parquet",
+     "bytes": 1576719,
+     "sha256": "f0b7e9da002e4961b0a7a8fcdd3e4acbc61556008d2c099bec460150b52c56ea"
+    }
+   ]
+  },
+  "layer1/pas_referrals": {
+   "rows": 105953,
+   "files": [
+    {
+     "path": "v2/sample/layer1/pas_referrals.parquet",
+     "bytes": 1080708,
+     "sha256": "5570e8e527256be2c6163584a9aea751d45533eb4b4a968e8e100ec4f299f970"
+    }
+   ]
+  },
+  "layer1/pas_outpatient_appointments": {
+   "rows": 316262,
+   "files": [
+    {
+     "path": "v2/sample/layer1/pas_outpatient_appointments.parquet",
+     "bytes": 6765419,
+     "sha256": "40ed654c24ced4a379c107691c19b91e78e435bc6bf28ff1f6ee9bb0a28f1e7b"
+    }
+   ]
+  },
+  "layer1/pas_op_status_log": {
+   "rows": 1095625,
+   "files": [
+    {
+     "path": "v2/sample/layer1/pas_op_status_log.parquet",
+     "bytes": 12856621,
+     "sha256": "2a1858438c393126ac301657d8a3dc73e1f36f0d9581b370cd72373bb6367020"
+    }
+   ]
+  },
+  "layer1/ris_imaging": {
+   "rows": 49175,
+   "files": [
+    {
+     "path": "v2/sample/layer1/ris_imaging.parquet",
+     "bytes": 3227787,
+     "sha256": "de9ccd67495d046c7bce78dc36050b2f074008bf8fa14629ae4f10d128402d78"
+    }
+   ]
+  },
+  "layer1/endo_procedures": {
+   "rows": 3624,
+   "files": [
+    {
+     "path": "v2/sample/layer1/endo_procedures.parquet",
+     "bytes": 121758,
+     "sha256": "8eac4c7db419d9f8da220ba8f3c8cf010d772dd51bbed4976a6c7f1b9247f283"
+    }
+   ]
+  },
+  "reference/admission_method": {
+   "rows": 11,
+   "files": [
+    {
+     "path": "v2/sample/reference/admission_method.parquet",
+     "bytes": 834,
+     "sha256": "26f446d89d5ed7f953ba3a654d6c463f5efa9c0c637443413719b7298dd5cca6"
+    }
+   ]
+  },
+  "reference/admission_source": {
+   "rows": 5,
+   "files": [
+    {
+     "path": "v2/sample/reference/admission_source.parquet",
+     "bytes": 514,
+     "sha256": "193126fc98bece81de587efc38278a5affc211d5c30e1c237a1cbb2acd10e6de"
+    }
+   ]
+  },
+  "reference/attendance_status": {
+   "rows": 6,
+   "files": [
+    {
+     "path": "v2/sample/reference/attendance_status.parquet",
+     "bytes": 789,
+     "sha256": "3524008e71c468b91ca7520f91df618d2670175d076430351d5f4cefdb9de1a1"
+    }
+   ]
+  },
+  "reference/beds": {
+   "rows": 1342,
+   "files": [
+    {
+     "path": "v2/sample/reference/beds.parquet",
+     "bytes": 4815,
+     "sha256": "04f1d8467ec9c5212024b35b09e1c2c5a9adc27e7ceaf99a0a1b20ee096a7705"
+    }
+   ]
+  },
+  "reference/clinics": {
+   "rows": 203,
+   "files": [
+    {
+     "path": "v2/sample/reference/clinics.parquet",
+     "bytes": 1115,
+     "sha256": "5c75d613004d546d8c46a4be08f7820744443b489d14bbd104a8f1ce4aade10e"
+    }
+   ]
+  },
+  "reference/consultants": {
+   "rows": 428,
+   "files": [
+    {
+     "path": "v2/sample/reference/consultants.parquet",
+     "bytes": 2662,
+     "sha256": "bc1162b0377c5d1d40fb789472eeea44aba37f680cf4d5bcb11b940d0078000c"
+    }
+   ]
+  },
+  "reference/discharge_destination": {
+   "rows": 7,
+   "files": [
+    {
+     "path": "v2/sample/reference/discharge_destination.parquet",
+     "bytes": 551,
+     "sha256": "9afb70e386d6fa157d050a318aa921b33effc229c30aae39b0a2e1e1424bc1dd"
+    }
+   ]
+  },
+  "reference/discharge_method": {
+   "rows": 4,
+   "files": [
+    {
+     "path": "v2/sample/reference/discharge_method.parquet",
+     "bytes": 571,
+     "sha256": "8bf3041a697b06372d2871a4ba73cfe7a832e05ad6897ca99acb043f4f178f65"
+    }
+   ]
+  },
+  "reference/ecds_codes": {
+   "rows": 277,
+   "files": [
+    {
+     "path": "v2/sample/reference/ecds_codes.parquet",
+     "bytes": 6183,
+     "sha256": "0882314edadf4e288125268ad0041d6fdd86a24846bf7cf0ed85acf5e49f1e1c"
+    }
+   ]
+  },
+  "reference/exam_catalogue": {
+   "rows": 41,
+   "files": [
+    {
+     "path": "v2/sample/reference/exam_catalogue.parquet",
+     "bytes": 3622,
+     "sha256": "ef99741d2fad64b7870b73e5843dac64cd998c33a995acc9e56cf8fec6d6adf3"
+    }
+   ]
+  },
+  "reference/patient_source_setting": {
+   "rows": 7,
+   "files": [
+    {
+     "path": "v2/sample/reference/patient_source_setting.parquet",
+     "bytes": 548,
+     "sha256": "3860fb62ee4e1a03fc9ab2270b5f6f04deeabce7833be613b606bab9918f380d"
+    }
+   ]
+  },
+  "reference/sites": {
+   "rows": 2,
+   "files": [
+    {
+     "path": "v2/sample/reference/sites.parquet",
+     "bytes": 655,
+     "sha256": "dbfff7deae0e0e56b7aba6180aaafe184118baa9958fbd685bd10c50d363a428"
+    }
+   ]
+  },
+  "reference/specialties": {
+   "rows": 20,
+   "files": [
+    {
+     "path": "v2/sample/reference/specialties.parquet",
+     "bytes": 2280,
+     "sha256": "f501c2361d357edfc318cfb2ffc6a736c6af3467fcbd05090e179fc839d53446"
+    }
+   ]
+  },
+  "reference/wards": {
+   "rows": 55,
+   "files": [
+    {
+     "path": "v2/sample/reference/wards.parquet",
+     "bytes": 1903,
+     "sha256": "ec7f7fc9e3e56772d490e7dca4d43dbc43f00681b5a2f908491f9ee718263552"
+    }
+   ]
+  },
+  "derived/ed_attendances": {
+   "rows": 40459,
+   "files": [
+    {
+     "path": "v2/sample/derived/ed_attendances.parquet",
+     "bytes": 2253483,
+     "sha256": "9732b5c25ca9d048d05bccb18a705829f2b458d68cd02a9498997fd9277bdba1"
+    }
+   ]
+  },
+  "derived/endoscopy_procedures": {
+   "rows": 3566,
+   "files": [
+    {
+     "path": "v2/sample/derived/endoscopy_procedures.parquet",
+     "bytes": 148985,
+     "sha256": "a1b275d274a4c711650a6e568cc1888334aaca3fe664857db2e460547ddc84d7"
+    }
+   ]
+  },
+  "derived/episodes": {
+   "rows": 45022,
+   "files": [
+    {
+     "path": "v2/sample/derived/episodes.parquet",
+     "bytes": 1116668,
+     "sha256": "050990a7d23d1e86b0cecf2d8a3c707b039751fff4781fec7a2e5c0d444410f4"
+    }
+   ]
+  },
+  "derived/imaging_exams": {
+   "rows": 46098,
+   "files": [
+    {
+     "path": "v2/sample/derived/imaging_exams.parquet",
+     "bytes": 3310016,
+     "sha256": "718ca81451f117d512e62edc725c989ef30c210530d75a3fcf56556d3ca3882e"
+    }
+   ]
+  },
+  "derived/mrn_map": {
+   "rows": 40300,
+   "files": [
+    {
+     "path": "v2/sample/derived/mrn_map.parquet",
+     "bytes": 518896,
+     "sha256": "52ed5b43f8b754abbbc4faaddfdbd02a9627574418aef20ca9491522c38edd70"
+    }
+   ]
+  },
+  "derived/op_appointments": {
+   "rows": 316262,
+   "files": [
+    {
+     "path": "v2/sample/derived/op_appointments.parquet",
+     "bytes": 10774682,
+     "sha256": "9b623be8c8a1c7ada6aebe9093b0f43ad0180cf11f3eaac13424876ea23e2c4c"
+    }
+   ]
+  },
+  "derived/patient_identifiers": {
+   "rows": 78445,
+   "files": [
+    {
+     "path": "v2/sample/derived/patient_identifiers.parquet",
+     "bytes": 649879,
+     "sha256": "ae70cc562c60255e12f901e489101d36fc1418ef3f17839fe0a4fd7aa2f38d9a"
+    }
+   ]
+  },
+  "derived/patients": {
+   "rows": 40088,
+   "files": [
+    {
+     "path": "v2/sample/derived/patients.parquet",
+     "bytes": 1314607,
+     "sha256": "17e2ee22679ed5d09b19500716b17e4aac119020860399d3a4f63e63227131d6"
+    }
+   ]
+  },
+  "derived/ref_ward_names": {
+   "rows": 232,
+   "files": [
+    {
+     "path": "v2/sample/derived/ref_ward_names.parquet",
+     "bytes": 3983,
+     "sha256": "b5cb66041a44b332d5597bc760f749e63f13871ad7fb5175fce73f5e10a553c4"
+    }
+   ]
+  },
+  "derived/rtt_pathways": {
+   "rows": 36417,
+   "files": [
+    {
+     "path": "v2/sample/derived/rtt_pathways.parquet",
+     "bytes": 958481,
+     "sha256": "77da3ce87b6e843fddc042f51fcfe41fd76bda844dbb820faf286639135698e7"
+    }
+   ]
+  },
+  "derived/spells": {
+   "rows": 38621,
+   "files": [
+    {
+     "path": "v2/sample/derived/spells.parquet",
+     "bytes": 1002766,
+     "sha256": "8d1df8e52deb1789c37209a6c8865d255f3f83f3c4a340a923d18beb248b188b"
+    }
+   ]
+  },
+  "derived/ward_stays": {
+   "rows": 48895,
+   "files": [
+    {
+     "path": "v2/sample/derived/ward_stays.parquet",
+     "bytes": 1139948,
+     "sha256": "2b815582ab31f7fd8f5822b2d17cbb3281265ac221652b4aa573b16c40fcbf31"
+    }
+   ]
+  },
+  "aggregate/ae_monthly": {
+   "rows": 72,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/ae_monthly.parquet",
+     "bytes": 3212,
+     "sha256": "fb560789bb6de8571c0340967560a95ffa8f234c7f3141550f83c5ac055b11c9"
+    }
+   ]
+  },
+  "aggregate/apc_monthly": {
+   "rows": 2538,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/apc_monthly.parquet",
+     "bytes": 25240,
+     "sha256": "32bfd9435ac32aacf6cbec877fb2cbf4e021bc418ba07fde7cfdca5de893f946"
+    }
+   ]
+  },
+  "aggregate/daily_flow": {
+   "rows": 21653,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/daily_flow.parquet",
+     "bytes": 47304,
+     "sha256": "f9ed30e1f6bf6bb44aa86e8251a9a47e979d6a91cf3096189bf4806c8f6f19b4"
+    }
+   ]
+  },
+  "aggregate/did_extract": {
+   "rows": 46100,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/did_extract.parquet",
+     "bytes": 1162483,
+     "sha256": "d182d6bd0ceab22f1c22908ef2a3f503b638ff514b9c4988fc148789fba6049b"
+    }
+   ]
+  },
+  "aggregate/did_monthly": {
+   "rows": 618,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/did_monthly.parquet",
+     "bytes": 6840,
+     "sha256": "3a95e364982359a72f7a76d35bc46a95cacf47d61c0f53ca58e147887fed570f"
+    }
+   ]
+  },
+  "aggregate/dm01_snapshot": {
+   "rows": 252,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/dm01_snapshot.parquet",
+     "bytes": 9034,
+     "sha256": "72fdca54a3cda1eafa07bac7497c131875fb49cb9c5726c181247ad0077c8b76"
+    }
+   ]
+  },
+  "aggregate/endoscopy_monthly": {
+   "rows": 899,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/endoscopy_monthly.parquet",
+     "bytes": 7693,
+     "sha256": "1d1a2a8f6f08a03dcf91103f358cfd532967541f4721e8f8fa5d44fe5064868f"
+    }
+   ]
+  },
+  "aggregate/midnight_census": {
+   "rows": 37684,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/midnight_census.parquet",
+     "bytes": 57755,
+     "sha256": "9f22968f668031b1f8699e59d0d503396fbe7c729fb133ca34f5ce00c2e36073"
+    }
+   ]
+  },
+  "aggregate/op_monthly": {
+   "rows": 1044,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/op_monthly.parquet",
+     "bytes": 13912,
+     "sha256": "c59cfd82a587e96ab402646ef7881276aa29f88bd54b25cc6d6bf584f589be41"
+    }
+   ]
+  },
+  "aggregate/rtt_incomplete": {
+   "rows": 648,
+   "files": [
+    {
+     "path": "v2/sample/aggregate/rtt_incomplete.parquet",
+     "bytes": 9027,
+     "sha256": "fd4390f97791ca58a7a54474c946391848acb61b8f097024d920b938d1544c5a"
+    }
+   ]
+  },
+  "answers/mess_log": {
+   "rows": 113294,
+   "files": [
+    {
+     "path": "v2/sample/answers/mess_log.parquet",
+     "bytes": 1267679,
+     "sha256": "c5c576e60c1ae5844461bfbe9622ab0dd58ec91dee5d796241fde522316718b0"
+    }
+   ]
+  },
+  "answers/truth/ed_admitted": {
+   "rows": 40459,
+   "files": [
+    {
+     "path": "v2/sample/answers/truth/ed_admitted.parquet",
+     "bytes": 134066,
+     "sha256": "838b9c6cb092110eb0dd2437bdeba699fe3ae3e43b6f4c3c08454b99cf775542"
+    }
+   ]
+  },
+  "answers/truth/endoscopy_links": {
+   "rows": 3566,
+   "files": [
+    {
+     "path": "v2/sample/answers/truth/endoscopy_links.parquet",
+     "bytes": 22704,
+     "sha256": "7d641837de1355dbfba0b96a3fede27429b3767d7050c76ce4869c41c5dbfe8c"
+    }
+   ]
+  },
+  "answers/truth/imaging_links": {
+   "rows": 47361,
+   "files": [
+    {
+     "path": "v2/sample/answers/truth/imaging_links.parquet",
+     "bytes": 346202,
+     "sha256": "be59729d526c11612ab4af7134533994c89c9ab052a0468a60d4afc8eddb2bc1"
+    }
+   ]
+  },
+  "answers/truth/mrn_aliases": {
+   "rows": 230,
+   "files": [
+    {
+     "path": "v2/sample/answers/truth/mrn_aliases.parquet",
+     "bytes": 2424,
+     "sha256": "faa16c188ff55366dda784b93c6dbdf95ef2e75ea234670f497d2f1190ff2a6b"
+    }
+   ]
+  },
+  "answers/truth/spells": {
+   "rows": 39107,
+   "files": [
+    {
+     "path": "v2/sample/answers/truth/spells.parquet",
+     "bytes": 898603,
+     "sha256": "651b33609322ecb13946274bcc91725d24c10fdc8c9165657740889bfedab4f0"
+    }
+   ]
+  },
+  "answers/truth/stays": {
+   "rows": 48457,
+   "files": [
+    {
+     "path": "v2/sample/answers/truth/stays.parquet",
+     "bytes": 720935,
+     "sha256": "d79f12423b494c0c7ba6330bd115608be094acdc0f23f9ccd0da8c2617c976bb"
+    }
+   ]
+  },
+  "sample-csv.zip": {
+   "files": [
+    {
+     "path": "v2/sample/sample-csv.zip",
+     "bytes": 69855536,
+     "sha256": "bcab16d268e5f19aa670fd3a3d529479811154f048c1c0d770cc69f5fe819612"
+    }
+   ],
+   "note": "the same tables as CSV, for tools that cannot read Parquet; the Parquet files are canonical"
+  }
+ },
+ "totals": {
+  "full_bytes": 1068310197,
+  "sample_bytes": 129203845
+ }
+}

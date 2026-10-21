@@ -89,7 +89,7 @@ generate <- function(seed = 20230401L, n_patients = 800000L, start = "2023-04-01
   meta <- list(version = if (is.null(mess)) "v1-clean" else "v1", seed = seed, n_patients = n_patients, start = as.character(start), end = as.character(end),
                scale = scale, mess = if (is.null(mess)) "none" else "default_mess_rates", generator = "fakehosp 0.2.0",
                elapsed_s = round(as.numeric(difftime(Sys.time(), t0, units = "secs")), 1))
-  gen <- list(tables = tables, reference = ref[c("sites", "wards", "specialties", "consultants", "clinics", "exam_catalogue", "admission_method",
+  gen <- list(tables = tables, reference = ref[c("sites", "wards", "beds", "specialties", "consultants", "clinics", "exam_catalogue", "admission_method",
                                                   "admission_source", "discharge_destination", "discharge_method", "attendance_status",
                                                   "patient_source_setting", "ecds_codes")], truth = truth, mess_log = mess_log, meta = meta)
   if (!is.null(out_dir)) write_layer1(gen, out_dir)

@@ -3,8 +3,7 @@
 A seeded, reproducible, deliberately messy synthetic dataset for a fictional
 acute trust (Fake NHS Trust), with an R generator, a DuckDB build, derived
 and aggregate SQL, a table viewer and entity relationship diagrams, deployed
-to GitHub Pages from `main`. It moved here from the `claude-scratchpad`
-repository, where it lived under `synthetic-hospital-datastructure/`.
+to GitHub Pages from `main`.
 
 ## Working rules
 

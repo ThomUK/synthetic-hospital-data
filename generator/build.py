@@ -132,7 +132,7 @@ def build_layers(con, out_dir, base, label, tables, partition=True, src="l1"):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", required=True); ap.add_argument("--out", required=True)
-    ap.add_argument("--sample", type=float, default=0.05); ap.add_argument("--version", default="v1")
+    ap.add_argument("--sample", type=float, default=0.05); ap.add_argument("--version", default="v2")
     ap.add_argument("--db", default=None, help="DuckDB file to use instead of memory (lets the build spill to disk)")
     a = ap.parse_args()
     run = Path(a.input); out = Path(a.out) / a.version; base = Path(a.out)

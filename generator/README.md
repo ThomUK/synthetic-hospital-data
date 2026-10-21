@@ -77,7 +77,7 @@ and are not published. Rebuilding takes about 1.5 minutes on four cores
 for the full set. The build ends by writing `preview/sample/` (the first
 100 rows of every sample table as JSON) for the table viewer; `preview.py`
 also runs on its own against a build directory or the repository's
-`data/v1`.
+`data/v2`.
 
 ## The ERD is built from the data
 

@@ -1,6 +1,6 @@
 import { TABS, diagramFor, layout, edgeTitle, parseRoute, fmtInt, pct, shortName, BOX } from './engine.js?v=dev';
 
-const ERD = '../data/v1/erd.json';
+const ERD = '../data/v2/erd.json';
 const VIEWER = '../viewer/#/';
 const NS = 'http://www.w3.org/2000/svg';
 const $ = (id) => document.getElementById(id);

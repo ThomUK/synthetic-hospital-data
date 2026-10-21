@@ -115,3 +115,10 @@ test_that("reference keys are unique and codes keep their leading zeros", {
   expect_equal(anyDuplicated(ref$consultants$consultant_code), 0L)
   expect_equal(anyDuplicated(ref$wards$ward_id), 0L)
 })
+
+
+test_that("the generator exports the beds reference table", {
+  g <- gen_small()
+  expect_true("beds" %in% names(g$reference))
+  expect_gt(nrow(g$reference$beds), 1000)
+})

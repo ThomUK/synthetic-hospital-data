@@ -11,7 +11,7 @@ on:
     inputs:
       version:
         description: Dataset version (directory under data/)
-        default: v1
+        default: v2
         required: true
 
 permissions:

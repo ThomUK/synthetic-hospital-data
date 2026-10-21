@@ -82,30 +82,30 @@
       <h3>5% sample (in this site, 129 MB)</h3>
       <p>About 40,000 patients with all of their rows in every table, so joins hold. Parquet, with a CSV zip for tools that cannot read Parquet.</p>
       <ul>
-        <li>Base URL: <a href="data/v1/sample/">data/v1/sample/</a></li>
-        <li><a href="data/v1/manifest.json">manifest.json</a>: every file with row counts, sizes and SHA-256; the generator seed and parameters</li>
-        <li><a href="data/v1/sample/sample-csv.zip">sample-csv.zip</a> (67 MB)</li>
+        <li>Base URL: <a href="data/v2/sample/">data/v2/sample/</a></li>
+        <li><a href="data/v2/manifest.json">manifest.json</a>: every file with row counts, sizes and SHA-256; the generator seed and parameters</li>
+        <li><a href="data/v2/sample/sample-csv.zip">sample-csv.zip</a> (67 MB)</li>
       </ul>
     </div>
     <div class="panel">
       <h3>Full set (GitHub release, 1.1 GB)</h3>
       <p>Every row, one Parquet asset per file. Asset names are the paths under <code>full/</code> with <code>/</code> replaced by <code>__</code>.</p>
       <ul>
-        <li><a href="https://github.com/ThomUK/synthetic-hospital-data/releases/tag/v1" target="_blank" rel="noopener">Release v1</a></li>
+        <li><a href="https://github.com/ThomUK/synthetic-hospital-data/releases/tag/v2" target="_blank" rel="noopener">Release v2</a></li>
       </ul>
     </div>
     <div class="panel">
       <h3>Query it from Python or R</h3>
       <p>DuckDB reads the Parquet straight from the URL.</p>
 <pre><code>import duckdb
-base = "https://thomuk.github.io/synthetic-hospital-data/data/v1/sample/"
+base = "https://thomuk.github.io/synthetic-hospital-data/data/v2/sample/"
 duckdb.sql(f"""
   SELECT tretspef_first, count(*) AS spells, median(speldur) AS median_los
   FROM read_parquet('{base}derived/spells.parquet')
   WHERE emergency GROUP BY 1 ORDER BY 2 DESC
 """).show()</code></pre>
 <pre><code>library(duckdb); con &lt;- dbConnect(duckdb())
-base &lt;- "https://thomuk.github.io/synthetic-hospital-data/data/v1/sample/"
+base &lt;- "https://thomuk.github.io/synthetic-hospital-data/data/v2/sample/"
 dbGetQuery(con, sprintf("SELECT count(*) FROM read_parquet('%sderived/spells.parquet')", base))</code></pre>
     </div>
     <div class="panel">
@@ -126,7 +126,7 @@ dbGetQuery(con, sprintf("SELECT count(*) FROM read_parquet('%sderived/spells.par
 
     <footer>
       Source on <a href="https://github.com/ThomUK/synthetic-hospital-data" target="_blank" rel="noopener">GitHub</a>.
-      Generated with seed 20230401; <code>data/v1/</code> is immutable once published.
+      Generated with seed 20230401; a published version is immutable, so <code>data/v2/</code> will not change.
     </footer>
   </div>
   <script type="module" src="banner.js?v=dev"></script>

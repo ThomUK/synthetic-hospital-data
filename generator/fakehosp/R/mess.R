@@ -567,6 +567,7 @@ mess_identity <- function(T, tr, r, ml, ctx) {
     swap <- function(dt, tname, datecol, keycol, mrncol = "mrn") {
       mm <- m[match(dt[[mrncol]], m$mrn)]
       hit <- !is.na(mm$mrn) & if (code == "M-PAS-07") as_dt(dt[[datecol]]) < mm$split else runif(nrow(dt)) < 0.4
+      hit[is.na(hit)] <- FALSE  # a row whose date is unparseable stays with its MRN
       if (any(hit)) { log_mess(ml, code, tname, dt[[keycol]][hit], mrncol, dt[[mrncol]][hit], "recorded under the duplicate MRN"); set(dt, which(hit), mrncol, mm$old_mrn[hit]) }
       dt
     }

@@ -1,6 +1,6 @@
 import { buildIndex, releaseUrl, sampleUrl, previewPath, formatCell, fmtBytes, fmtInt, parseRoute, routeFor, isNumericType, assetName } from './engine.js?v=dev';
 
-const DATA_ROOT = '../data/v1/';
+const DATA_ROOT = '../data/v2/';
 const RELEASE_PAGE = 'https://github.com/ThomUK/synthetic-hospital-data/releases/tag/';
 const view = document.getElementById('view');
 const status = document.getElementById('status');
