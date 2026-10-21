@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write 100-row JSON previews of every table in the sample, for the data viewer.
 
-    generator/preview.py <data_dir>/<version>            # e.g. data/v1
+    generator/preview.py <data_dir>/<version>            # e.g. data/v2
 
 Reads manifest.json, takes the first 100 rows of each sample table in file
 order and writes preview/sample/<layer>__<table>.json with the column names,

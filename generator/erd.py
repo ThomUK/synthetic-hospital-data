@@ -2,7 +2,7 @@
 """Build erd.json for the ERD page from the published data, so the diagram
 stays in sync with what is actually there.
 
-    generator/erd.py <data_dir>/<version>            # e.g. data/v1
+    generator/erd.py <data_dir>/<version>            # e.g. data/v2
 
 Columns and types are read from the sample Parquet files, row counts from
 manifest.json, and lineage (which tables each derived or aggregate table is
