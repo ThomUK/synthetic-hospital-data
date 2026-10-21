@@ -18,6 +18,7 @@
     .repo-link { margin: 6px 0 0; font-size: 0.85rem; }
     .repo-link a { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); text-decoration: none; }
     .repo-link a:hover { color: var(--accent); }
+    .hero { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--panel-border); margin: 18px 0 6px; }
     .lede { color: var(--muted); max-width: 70ch; margin: 18px 0 28px; }
     a { color: var(--accent); }
     .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 0 0 8px; }
@@ -46,6 +47,8 @@
         View source on GitHub
       </a>
     </p>
+    <img class="hero" src="docs/images/fake-nhs-trust.png?v=dev" width="1672" height="941"
+         alt="Fake NHS Trust: a glass hospital with floating table schemas and activity charts" />
     <p class="lede">
       A seeded, reproducible synthetic dataset for <strong>Fake NHS Trust</strong>, a fictional
       large acute trust with two hospitals, covering 1 April 2023 to 31 March 2026. It is built
