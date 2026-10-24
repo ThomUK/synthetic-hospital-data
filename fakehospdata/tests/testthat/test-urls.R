@@ -14,3 +14,7 @@ test_that("the cache directory honours the environment variable", {
   withr::local_envvar(FAKEHOSPDATA_CACHE = "")
   expect_match(fh_cache_dir(), "fakehospdata")
 })
+
+test_that("the release manifest has its own url and cache file", {
+  expect_equal(fakehospdata:::release_base, "https://github.com/ThomUK/synthetic-hospital-data/releases/download/")
+})

@@ -21,9 +21,9 @@
 fh_download <- function(scale = c("sample", "full"), version = "v2", tables = NULL,
                         cache = fh_cache_dir(), quiet = FALSE) {
   scale <- match.arg(scale)
-  tabs <- fh_tables(scale, version, cache)
+  m <- scale_manifest(scale, version, cache)
+  tabs <- fh_tables(scale, version, cache, manifest = m)
   tabs <- select_tables(tabs, tables)
-  m <- fh_manifest(version, cache)
   files <- do.call(rbind, lapply(tabs$table, function(t) {
     f <- m[[scale]][[t]]$files
     data.frame(path = vapply(f, function(x) x$path, character(1)),
@@ -42,8 +42,9 @@ fh_download <- function(scale = c("sample", "full"), version = "v2", tables = NU
       utils::download.file(fh_url(todo$path[i]), tmp, mode = "wb", quiet = TRUE)
       if (!is.na(todo$bytes[i]) && file.size(tmp) != todo$bytes[i]) {
         unlink(tmp)
-        stop("Downloaded size of ", todo$path[i], " does not match the manifest")
+        stop("Downloaded size of ", todo$path[i], " (", file.size(tmp), " bytes) does not match the manifest (", todo$bytes[i], ")")
       }
+      check_parquet(tmp, todo$path[i])
       file.rename(tmp, todo$dest[i])
       if (!quiet && (i %% 10 == 0 || i == nrow(todo))) message(sprintf("  %d of %d files", i, nrow(todo)))
     }
@@ -58,4 +59,19 @@ select_tables <- function(tabs, tables) {
   missing <- setdiff(tables, c(tabs$table, tabs$name))
   if (length(missing) > 0) stop("Unknown table(s): ", paste(missing, collapse = ", "))
   tabs[keep, , drop = FALSE]
+}
+
+#' Fail early on a truncated or non-Parquet download by reading its metadata
+#' @noRd
+check_parquet <- function(file, path) {
+  con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+  ok <- tryCatch({
+    DBI::dbGetQuery(con, paste0("SELECT count(*) AS n FROM parquet_metadata('", gsub("'", "''", file, fixed = TRUE), "')"))
+    TRUE
+  }, error = function(e) FALSE)
+  if (!ok) {
+    unlink(file)
+    stop("Downloaded file ", path, " is not a readable Parquet file")
+  }
 }

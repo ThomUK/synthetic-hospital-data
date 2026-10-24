@@ -4,7 +4,12 @@
 \alias{fh_manifest}
 \title{Read a version's manifest}
 \usage{
-fh_manifest(version = "v2", cache = fh_cache_dir(), refresh = FALSE)
+fh_manifest(
+  version = "v2",
+  cache = fh_cache_dir(),
+  refresh = FALSE,
+  source = c("pages", "release")
+)
 }
 \arguments{
 \item{version}{Dataset version, such as \code{"v2"}.}
@@ -12,6 +17,9 @@ fh_manifest(version = "v2", cache = fh_cache_dir(), refresh = FALSE)
 \item{cache}{Cache directory, see \code{\link[=fh_cache_dir]{fh_cache_dir()}}.}
 
 \item{refresh}{Download again even if cached?}
+
+\item{source}{\code{"pages"} (the committed manifest) or \code{"release"} (the
+manifest attached to the release of this version).}
 }
 \value{
 The parsed manifest as a list.
@@ -20,4 +28,13 @@ The parsed manifest as a list.
 The manifest lists every file of the sample and the full set with its row
 count, size and checksum. It is downloaded once into the cache and read
 from there afterwards; \code{refresh = TRUE} downloads it again.
+}
+\details{
+There are two copies. The one committed to the repository and served by
+Pages describes the sample files exactly, but its full-set sizes and
+checksums describe the build made in the session that committed it. The
+release assets are rebuilt from the seed on a GitHub runner, and the rows
+are identical but the Parquet bytes are not, so the release carries its own
+manifest, which is the one that describes the assets. \code{source = "release"}
+reads that copy; \code{\link[=fh_download]{fh_download()}} uses it for the full set.
 }

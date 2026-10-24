@@ -16,6 +16,7 @@ local_sample_cache <- function(tables = c("reference/sites", "reference/specialt
   cache <- withr::local_tempdir(.local_envir = env)
   dir.create(file.path(cache, "v2"), recursive = TRUE)
   file.copy(file.path(src, "manifest.json"), file.path(cache, "v2", "manifest.json"))
+  file.copy(file.path(src, "manifest.json"), file.path(cache, "v2", "manifest-release.json"))  # stands in for the release copy
   m <- jsonlite::fromJSON(file.path(src, "manifest.json"), simplifyVector = FALSE)
   for (t in tables) {
     for (f in m$sample[[t]]$files) {

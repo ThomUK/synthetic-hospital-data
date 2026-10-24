@@ -17,3 +17,10 @@ test_that("fh_download skips files already in the cache and rejects unknown tabl
   expect_true(all(file.exists(unlist(got$files))))
   expect_error(fh_download("sample", tables = "no_such_table", cache = cache), "Unknown table")
 })
+
+test_that("a corrupt download is rejected", {
+  cache <- local_sample_cache()
+  bad <- tempfile(fileext = ".parquet"); writeLines("not parquet", bad)
+  expect_error(fakehospdata:::check_parquet(bad, "x.parquet"), "not a readable Parquet")
+  expect_false(file.exists(bad))
+})
