@@ -1,0 +1,25 @@
+Package: fakehospdata
+Title: Read the Fake NHS Trust Synthetic Hospital Dataset
+Version: 0.1.0
+Authors@R: person("Claude", role = c("aut", "cre"), email = "noreply@anthropic.com")
+Description: Downloads a published version of the Fake NHS Trust synthetic
+    hospital dataset (the 5% sample from GitHub Pages or the full set from a
+    GitHub release) into a local cache and opens it as a DuckDB database with
+    one schema per layer and one view per table, so that joins run locally.
+    See docs/DESIGN.md and data/README.md in the repository.
+License: MIT
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+URL: https://github.com/ThomUK/synthetic-hospital-data
+Depends: R (>= 4.1)
+Imports:
+    DBI,
+    duckdb,
+    jsonlite,
+    tools,
+    utils
+Suggests:
+    testthat (>= 3.0.0),
+    withr
+Config/testthat/edition: 3

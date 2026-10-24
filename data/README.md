@@ -86,6 +86,18 @@ dbGetQuery(con, sprintf("SELECT count(*) FROM read_parquet('%sderived/spells.par
 
 R, with arrow: `arrow::read_parquet(paste0(base, "derived/spells.parquet"))`.
 
+R, with the `fakehospdata` package in this repository, which downloads a
+scale once into a cache and exposes every table as a DuckDB view
+(`layer1.*`, `reference.*`, `derived.*`, `aggregate.*`, `answers.*`):
+
+```r
+# remotes::install_github("ThomUK/synthetic-hospital-data", subdir = "fakehospdata")
+library(fakehospdata)
+con <- fh_connect("sample")          # or "full": about 1.1 GB from the release
+DBI::dbGetQuery(con, "SELECT tretspef_first, count(*) FROM derived.spells GROUP BY 1")
+DBI::dbDisconnect(con, shutdown = TRUE)
+```
+
 Tables partitioned by financial year in the full set are directories of
 `fy2022.parquet` ... `fy2025.parquet`; read them with a glob
 (`read_parquet('.../pas_adt_events/*.parquet')`) or by listing the files in

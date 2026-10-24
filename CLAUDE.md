@@ -23,6 +23,8 @@ to GitHub Pages from `main`.
 - Pure-JS apps keep their engine DOM-free and unit-tested:
   `node tests/engine.test.mjs` in `viewer/` and `erd/`, and
   `node tests/banner.test.mjs` at the root.
-- The R package tests: `cd generator/fakehosp && Rscript -e 'testthat::test_dir("tests/testthat")'`.
+- The R package tests: `cd generator/fakehosp && Rscript -e 'testthat::test_dir("tests/testthat")'`
+  and `cd fakehospdata && Rscript -e 'testthat::test_local(".")'` (the reader
+  package; its tests seed a cache from `data/v2/sample`, so they run offline).
 - Full-set releases come from the `release` workflow (Actions tab, run by
   hand with the version as input), never from a session. See `generator/README.md`.

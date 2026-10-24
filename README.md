@@ -6,7 +6,9 @@
 the [v2 release](https://github.com/ThomUK/synthetic-hospital-data/releases/tag/v2),
 and the [project page](https://thomuk.github.io/synthetic-hospital-data/)
 [table viewer](https://thomuk.github.io/synthetic-hospital-data/viewer/)
-and [ERDs](https://thomuk.github.io/synthetic-hospital-data/erd/) are live. The browser SQL console and the R helper package are still to come.
+and [ERDs](https://thomuk.github.io/synthetic-hospital-data/erd/) are live. The R helper package
+[`fakehospdata`](fakehospdata/) downloads either scale into a local cache and opens it as a
+DuckDB database (`fh_connect("sample")`). The browser SQL console is still to come.
 
 A seeded, reproducible synthetic dataset mimicking the data domain of a
 single fictional English acute trust, built in three layers so that the
@@ -22,6 +24,9 @@ can be explored and taught with real SQL.
   distribution traced to its public source.
 - [`data/README.md`](data/README.md) — where the data is, how to read it
   from Python and R, versioning.
+- [`fakehospdata/`](fakehospdata/) — the R package for readers:
+  `fh_connect(scale)` returns a DuckDB connection with one schema per layer
+  and one view per table; `fh_download()`, `fh_tables()`, `fh_read()`.
 - [`generator/README.md`](generator/README.md) — the R package, the DuckDB
   build, the release workflow.
 - [`viewer/`](viewer/) — the table viewer: an index of every table with
