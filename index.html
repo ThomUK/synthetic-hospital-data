@@ -89,8 +89,8 @@
       <p>About 40,000 patients with all of their rows in every table, so joins hold. Parquet, with a CSV zip for tools that cannot read Parquet.</p>
       <ul>
         <li>Base URL: <code id="base-url">https://thomuk.github.io/synthetic-hospital-data/data/v2/sample/</code>
-            <button type="button" class="copy" data-copy="base-url">copy</button>
-            &middot; <a href="viewer/">browse the tables</a> (a directory URL on its own does not list its files)</li>
+            <button type="button" class="copy" data-copy="base-url">copy url</button>
+            &middot; <a href="viewer/">browse the tables</a></li>
         <li><a href="data/v2/manifest.json">manifest.json</a>: every file with row counts, sizes and SHA-256; the generator seed and parameters</li>
         <li><a href="data/v2/sample/sample-csv.zip">sample-csv.zip</a> (67 MB)</li>
       </ul>
@@ -145,7 +145,7 @@ dbGetQuery(con, sprintf("SELECT count(*) FROM read_parquet('%sderived/spells.par
         const text = document.getElementById(b.dataset.copy).textContent.trim();
         try { await navigator.clipboard.writeText(text); b.textContent = 'copied'; }
         catch (e) { window.prompt('Copy the base URL:', text); }
-        setTimeout(() => { b.textContent = 'copy'; }, 1500);
+        setTimeout(() => { b.textContent = 'copy url'; }, 1500);
       });
     }
   </script>
