@@ -33,6 +33,9 @@
     pre { background: #0b0f14; border: 1px solid var(--panel-border); border-radius: 8px; padding: 12px 14px;
           overflow-x: auto; font-size: 0.85rem; margin: 10px 0 0; }
     code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9em; }
+    button.copy { font: inherit; font-size: 0.75rem; font-weight: 600; color: var(--accent); background: transparent;
+                  border: 1px solid var(--panel-border); border-radius: 999px; padding: 1px 9px; margin-left: 6px; cursor: pointer; vertical-align: middle; }
+    button.copy:hover { border-color: var(--accent); }
     .soon { font-size: 0.75rem; font-weight: 600; color: var(--accent); border: 1px solid var(--panel-border);
             border-radius: 999px; padding: 2px 9px; margin-left: 8px; vertical-align: middle; }
     footer { margin-top: 40px; color: var(--muted); font-size: 0.85rem; }
@@ -85,7 +88,9 @@
       <h3>5% sample (in this site, 129 MB)</h3>
       <p>About 40,000 patients with all of their rows in every table, so joins hold. Parquet, with a CSV zip for tools that cannot read Parquet.</p>
       <ul>
-        <li>Base URL: <a href="data/v2/sample/">data/v2/sample/</a></li>
+        <li>Base URL: <code id="base-url">https://thomuk.github.io/synthetic-hospital-data/data/v2/sample/</code>
+            <button type="button" class="copy" data-copy="base-url">copy</button>
+            &middot; <a href="viewer/">browse the tables</a> (a directory URL on its own does not list its files)</li>
         <li><a href="data/v2/manifest.json">manifest.json</a>: every file with row counts, sizes and SHA-256; the generator seed and parameters</li>
         <li><a href="data/v2/sample/sample-csv.zip">sample-csv.zip</a> (67 MB)</li>
       </ul>
@@ -133,5 +138,16 @@ dbGetQuery(con, sprintf("SELECT count(*) FROM read_parquet('%sderived/spells.par
     </footer>
   </div>
   <script type="module" src="banner.js?v=dev"></script>
+  <script>
+    // Copy buttons: put the text of the element named in data-copy on the clipboard.
+    for (const b of document.querySelectorAll('button.copy')) {
+      b.addEventListener('click', async () => {
+        const text = document.getElementById(b.dataset.copy).textContent.trim();
+        try { await navigator.clipboard.writeText(text); b.textContent = 'copied'; }
+        catch (e) { window.prompt('Copy the base URL:', text); }
+        setTimeout(() => { b.textContent = 'copy'; }, 1500);
+      });
+    }
+  </script>
 </body>
 </html>
