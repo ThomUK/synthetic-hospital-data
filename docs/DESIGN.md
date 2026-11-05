@@ -185,7 +185,9 @@ everything in the inpatient domain is derived from it.
 | `decision_to_admit_date` | HES `ELECDATE`, elective admissions only |
 | `discharge_method` | HES `DISMETH`: 1 clinical discharge, 4 died, 6 self-discharge, 7 discharged by relative. On A03 only. |
 | `discharge_destination` | HES `DISDEST`: 19 home, 54 care home, 51 other NHS provider, 79 died, etc. On A03 only. |
-| `discharge_ready_date` | HES `DISREADYDATE`, populated for a minority of long-stay patients. On A03 only. |
+| `planned_discharge_pathway` | Discharge-to-assess pathway the ward planned before discharge: `P0` home with no new support, `P1` home with new or more support, `P2` a short-term bed, `P3` long-term care. Not a HES field; most trusts hold it in the EPR's discharge planning record and some push it onto the discharge message, which is what this table does. Mostly blank on simple (P0) discharges, which are rarely planned formally. Deaths and day cases have no pathway. On A03 only. |
+| `discharge_pathway` | The pathway the patient actually left on, same codes. Differs from the planned pathway when the plan changed. On A03 only. |
+| `discharge_ready_date` | HES `DISREADYDATE`: the date the patient no longer met the criteria to reside. Recorded on most P1-P3 discharges and a quarter of P0 ones; the gap to the discharge date is the delay, longest on P2 and P3. On A03 only. |
 | `prior_mrn` | on A40 only: the MRN being merged away |
 
 About 9 events per ordinary admission and 3 per day case. Volume: 250,000
@@ -531,7 +533,7 @@ without a dictionary.
 | Table | Grain | Derived from | Key decisions the SQL has to make |
 | --- | --- | --- | --- |
 | `patients` | one row per real person (master patient index) | all sources + A40 merges | which MRN survives; how ED, RIS and endoscopy identifiers map on |
-| `spells` | one hospital provider spell (`PROVSPNO`, `ADMIDATE`, `DISDATE`, `ADMIMETH`, `ADMISORC`, `CLASSPAT`, `DISMETH`, `DISDEST`, `SPELDUR`) | `pas_adt_events` | handling A11/A13 cancellations, duplicate A03s, missing A03s, open spells at the edges |
+| `spells` | one hospital provider spell (`PROVSPNO`, `ADMIDATE`, `DISDATE`, `ADMIMETH`, `ADMISORC`, `CLASSPAT`, `DISMETH`, `DISDEST`, `DISREADYDATE`, `SPELDUR`) plus `planned_discharge_pathway`, `discharge_pathway` (normalised to `P0`-`P3`, otherwise null) and `discharge_delay_days` | `pas_adt_events` | handling A11/A13 cancellations, duplicate A03s, missing A03s, open spells at the edges; reading pathways typed in several forms |
 | `episodes` | consultant episode (`EPIKEY`, `EPIORDER`, `EPISTART`, `EPIEND`, `TRETSPEF`, `MAINSPEF`, `SPELBGIN`, `SPELEND`, `EPISTAT`) | A01 + A08 specialty changes | episode boundaries when A08 is a correction rather than a transfer of care; `EPISTAT` 3 finished / unfinished at year end |
 | `ward_stays` | one continuous stay on one ward | A01/A02/A03 | normalising ward names; stays of zero minutes; ED and Discharge Lounge as locations |
 | `ed_attendances_clean` | one attendance (`AEKEY`-style key) | `ed_attendances` + `ed_status_log` + MPI | resolving unmapped MRNs; linking admitted attendances to spells (HES AE carries `EPIKEY`, APC carries `AEKEY` **(source: HES data model)**); choosing the *first* time a status was reached rather than the last-written one when the record has bounced |

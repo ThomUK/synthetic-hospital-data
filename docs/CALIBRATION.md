@@ -622,7 +622,40 @@ outpatient file for 2025/26.
 | First attendances referred by a GP | 50% |
 | Median GP referral to first attendance | 17 days |
 
-## 8. Not supplied, still assumptions
+## 8. Discharge pathways (assumptions, with the shape in `default_discharge_pathways()`)
+
+No public dataset gives discharge-to-assess pathway shares by trust in a
+form the generator can copy, so these are assumptions, exposed as one
+configuration object so a run can be reshaped without touching the code.
+
+- **Planned pathway shares by age band.** The 2020 Hospital Discharge
+  Service guidance planned for 50% P0, 45% P1, 4% P2 and 1% P3 across acute
+  discharges; the published acute discharge situation reports show real
+  trusts with far more P0 than that. The generator takes the higher-P0 view
+  and lets age carry the gradient: under 65s 94/5/0.8/0.2, 65-74 82/14/3/1,
+  75-84 64/26/7/3, 85 and over 45/35/12/8 (P0/P1/P2/P3, %). Pooled over the
+  dataset's age mix this gives roughly 80% P0, 14% P1, 4% P2 and 2% P3 of
+  live inpatient discharges.
+- **Elective admissions** need less support: their P1-P3 shares are scaled
+  by 0.4 and P0 takes the remainder.
+- **Planned against actual.** The actual pathway follows the plan 97% of
+  the time for P0, 80% for P1, 75% for P2 and 88% for P3; the rest step up
+  or down one pathway, with P1 plans most often ending as P0 (12%).
+- **Recording.** A planned pathway is written down for 35% of P0 discharges
+  and nearly all P1-P3 ones, because simple discharges are not planned
+  formally. The discharge ready date is recorded for 25% of P0 discharges
+  and 90-95% of P1-P3 ones.
+- **Delay** from no longer meeting the criteria to reside to discharge: no
+  delay for 85% of P0, 30% of P1, 10% of P2 and 5% of P3; otherwise
+  lognormal with medians of 1, 2, 5 and 9 days. Capped at the length of
+  stay.
+- **Destination** follows the actual pathway: P0 and P1 go to usual or
+  temporary residence (P0 keeps a 4% share of transfers to another NHS
+  hospital), P2 to another NHS hospital (70%) or a non-NHS hospital (30%),
+  P3 to a care home (60%) or a non-NHS care home (40%). Deaths and day
+  cases have no pathway and keep their HES destinations.
+
+## 9. Not supplied, still assumptions
 
 - Slot lengths and room times for individual exam types: nothing supplied
   gives them, and GIRFT says no national figure exists.

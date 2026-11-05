@@ -5,13 +5,15 @@
 #' @param start,end activity window (dates)
 #' @param volumes annual volumes at full scale, see [default_volumes()]
 #' @param mess mess rates keyed by catalogue code (see [default_mess_rates()]); `NULL` for a clean dataset
+#' @param pathways discharge pathway shape, see [default_discharge_pathways()]
 #' @param out_dir if given, the tables are written there as CSV with a manifest
 #' @param verbose print progress
 #' @return a list with `tables` (layer-1 source extracts), `reference`, `truth`
 #'   (the clean spell and stay tables the derived layer should reproduce) and `meta`
 #' @export
 generate <- function(seed = 20230401L, n_patients = 800000L, start = "2023-04-01", end = "2026-03-31",
-                     volumes = default_volumes(), mess = default_mess_rates(), out_dir = NULL, verbose = TRUE) {
+                     volumes = default_volumes(), mess = default_mess_rates(), pathways = default_discharge_pathways(),
+                     out_dir = NULL, verbose = TRUE) {
   checkmate::assert_int(seed); checkmate::assert_int(n_patients, lower = 1000L)
   start <- as.Date(start); end <- as.Date(end)
   scale <- n_patients / volumes$patients_full_scale
@@ -21,7 +23,7 @@ generate <- function(seed = 20230401L, n_patients = 800000L, start = "2023-04-01
   pts <- generate_patients(n_patients, seed, start, end)
   ed  <- generate_ed(pts, ref, volumes, scale, seed, start, end, verbose)
   op  <- generate_outpatients(pts, ref, volumes, scale, seed, start, end, verbose)
-  adm <- generate_admissions(pts, ref, volumes, scale, seed, start, end, ed, op, verbose)
+  adm <- generate_admissions(pts, ref, volumes, scale, seed, start, end, ed, op, verbose, pathways)
   # elective admissions close the RTT clocks of the pathways they came from
   if (nrow(adm$rtt_stops) > 0L) {
     op$referrals[adm$rtt_stops, on = "referral_id", `:=`(rtt_period_end_date = i.admit_date, rtt_period_status = "30")]
@@ -47,8 +49,8 @@ generate <- function(seed = 20230401L, n_patients = 800000L, start = "2023-04-01
   dup <- cand[duplicated(mrn)]
   if (nrow(dup) > 0L) {
     rs <- dup[src == "spell", key]; re <- dup[src == "ed", key]
-    adm$spells[visit_number %in% rs, `:=`(died = FALSE, discharge_method = "1", discharge_destination = "19")]
-    adm$events[visit_number %in% rs & event_type == "A03", `:=`(discharge_method = "1", discharge_destination = "19")]
+    adm$spells[visit_number %in% rs, `:=`(died = FALSE, discharge_method = "1", discharge_destination = "19", discharge_pathway = ifelse(day_case, NA_character_, "P0"))]
+    adm$events[visit_number %in% rs & event_type == "A03", `:=`(discharge_method = "1", discharge_destination = "19", discharge_pathway = ifelse(patient_class == "2", NA_character_, "P0"))]
     ed$attendances[uec_activity_identifier %in% re, `:=`(died = FALSE, discharge_status = "Treatment complete", discharge_destination = "Usual place of residence / family members")]
   }
   dod <- cand[!duplicated(mrn), .(mrn, dod)]
@@ -71,7 +73,8 @@ generate <- function(seed = 20230401L, n_patients = 800000L, start = "2023-04-01
   )
   truth <- list(
     spells = adm$spells[, .(visit_number, mrn, admit, discharge, admission_method, patient_class, specialty_first = first_specialty, specialty_last = specialty_code,
-                            site_code, los, died, day_case, endoscopy, n_episodes, origin, uec_activity_identifier, referral_id, open_at_end)],
+                            site_code, los, died, day_case, endoscopy, n_episodes, origin, uec_activity_identifier, referral_id, open_at_end,
+                            planned_discharge_pathway, discharge_pathway, discharge_ready_date)],
     stays = adm$stays,
     ed_admitted = ed$attendances[, .(uec_activity_identifier, admitted)],
     imaging_links = img[, .(accession_number, linked_id)],

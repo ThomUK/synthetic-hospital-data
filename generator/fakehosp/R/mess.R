@@ -12,6 +12,7 @@ default_mess_rates <- function() {
     `M-PAS-01` = 0.005, `M-PAS-02` = 0.008, `M-PAS-03` = 0.02, `M-PAS-04` = 0.06, `M-PAS-05` = 0.015, `M-PAS-06` = 0.01,
     `M-PAS-07` = 0.012, `M-PAS-08` = 0.003, `M-PAS-09` = 0.08, `M-PAS-10` = 0.01, `M-PAS-11` = 0.03, `M-PAS-12` = 0.15,
     `M-PAS-13` = 0.04, `M-PAS-15` = 0.002, `M-PAS-16` = 0.40,
+    `M-PAS-17` = 0.06, `M-PAS-18` = 0.10, `M-PAS-19` = 0.08, `M-PAS-20` = 0.15,
     `M-ED-01` = 0.04, `M-ED-02` = 0.001, `M-ED-03` = 0.60, `M-ED-04` = 0.05, `M-ED-05` = 0.20, `M-ED-06` = 0.03, `M-ED-07` = 0.02,
     `M-OP-01` = 0.03, `M-OP-02` = 0.03, `M-OP-03` = 0.015, `M-OP-04` = 0.10,
     `M-BOUNCE-01` = 0.015, `M-BOUNCE-02` = 0.008, `M-BOUNCE-03` = 0.60, `M-BOUNCE-04` = 0.02, `M-BOUNCE-05` = 0.03,
@@ -91,6 +92,18 @@ ward_variant <- function(w) {
   v
 }
 
+# Discharge pathway variants used by M-PAS-19: "P1" becomes "1", "Pathway 1", "p1" or "P 1".
+pathway_variant <- function(x) {
+  d <- sub("^P", "", x)
+  k <- sample.int(4L, length(x), TRUE)
+  v <- x
+  v[k == 1L] <- d[k == 1L]
+  v[k == 2L] <- paste0("Pathway ", d[k == 2L])
+  v[k == 3L] <- tolower(x[k == 3L])
+  v[k == 4L] <- paste0("P ", d[k == 4L])
+  v
+}
+
 # ---- PAS -------------------------------------------------------------------
 mess_pas <- function(T, tr, r, ml, ctx) {
   ev <- T$pas_adt_events; sp <- tr$spells
@@ -109,7 +122,7 @@ mess_pas <- function(T, tr, r, ml, ctx) {
     fix <- a01[i]
     corr <- fix[, .(message_id = NA_integer_, event_type = "A08", event_datetime = event_datetime + mins(runif(.N, 5, 55)), recorded_datetime = event_datetime + mins(runif(.N, 6, 60)),
                     mrn, visit_number, site_code, ward = NA_character_, bed = NA_character_, consultant_code, specialty_code, admission_method = NA_character_, admission_source = NA_character_,
-                    intended_management, patient_class, decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
+                    intended_management, patient_class, decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
     log_mess(ml, "M-PAS-11", "pas_adt_events", fix$message_id, "specialty_code", fix$specialty_code, "A01 specialty wrong; the A08 that follows is a correction, not a transfer of care")
     ev[message_id %in% fix$message_id, specialty_code := wrong[specialty_code]]
     ev <- reseq(rbind(ev, corr))
@@ -124,7 +137,7 @@ mess_pas <- function(T, tr, r, ml, ctx) {
     a[, dta := c2$dta[match(visit_number, c2$visit_number)]]
     mv <- a[, .(message_id = NA_integer_, event_type = "A02", event_datetime, recorded_datetime = event_datetime + mins(runif(.N, 0, 10)), mrn, visit_number, site_code, ward, bed,
                 consultant_code, specialty_code, admission_method = NA_character_, admission_source = NA_character_, intended_management, patient_class, decision_to_admit_date = as.Date(NA),
-                discharge_method = NA_character_, discharge_destination = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
+                discharge_method = NA_character_, discharge_destination = NA_character_, planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
     log_mess(ml, "M-PAS-12", "pas_adt_events", a$message_id, "ward", a$ward, "A01 moved to decision-to-admit time on ward ED; arrival on the ward is the A02 that follows")
     ev[message_id %in% a$message_id, `:=`(ward = "ED", bed = NA_character_, event_datetime = a$dta[match(message_id, a$message_id)], recorded_datetime = a$dta[match(message_id, a$message_id)] + mins(runif(.N, 0, 10)))]
     ev <- reseq(rbind(ev, mv))
@@ -137,7 +150,7 @@ mess_pas <- function(T, tr, r, ml, ctx) {
     a <- ev[event_type == "A01" & visit_number %in% v]
     a11 <- a[, .(message_id = NA_integer_, event_type = "A11", event_datetime = event_datetime + mins(runif(.N, 30, 180)), recorded_datetime = event_datetime + mins(runif(.N, 31, 190)), mrn, visit_number, site_code,
                  ward, bed = NA_character_, consultant_code, specialty_code, admission_method = NA_character_, admission_source = NA_character_, intended_management, patient_class, decision_to_admit_date = as.Date(NA),
-                 discharge_method = NA_character_, discharge_destination = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
+                 discharge_method = NA_character_, discharge_destination = NA_character_, planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
     gone <- ev[visit_number %in% v & event_type %in% c("A02", "A03", "A08")]
     log_mess(ml, "M-PAS-05", "pas_adt_events", a$message_id, "event_type", "A01", "admission cancelled by A11; the spell never happened")
     log_mess(ml, "M-PAS-05", "pas_adt_events", gone$message_id, "event_type", gone$event_type, "event removed: admission was cancelled")
@@ -155,7 +168,9 @@ mess_pas <- function(T, tr, r, ml, ctx) {
     mk <- function(type, t, ward = NA_character_) a[, .(message_id = NA_integer_, event_type = type, event_datetime = t, recorded_datetime = t + mins(runif(.N, 0, 10)), mrn, visit_number, site_code, ward = ward, bed = NA_character_,
                                                         consultant_code, specialty_code, admission_method = NA_character_, admission_source = NA_character_, intended_management, patient_class, decision_to_admit_date = as.Date(NA),
                                                         discharge_method = if (type == "A03") a$discharge_method else NA_character_, discharge_destination = if (type == "A03") a$discharge_destination else NA_character_,
-                                                        discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
+                                                        planned_discharge_pathway = if (type == "A03") a$planned_discharge_pathway else NA_character_,
+                                                        discharge_pathway = if (type == "A03") a$discharge_pathway else NA_character_,
+                                                        discharge_ready_date = if (type == "A03") a$discharge_ready_date else as.Date(NA), prior_mrn = NA_character_)]
     new <- rbind(mk("A13", t13), if (with_a02) mk("A02", t13 + mins(runif(nrow(a), 5, 40)), a$ward) else NULL, mk("A03", t03, a$ward))
     log_mess(ml, code, "pas_adt_events", a$message_id, "event_datetime", chr(a$event_datetime), "first A03 cancelled by A13; the later A03 is the real discharge")
     ev <<- reseq(rbind(ev, new))
@@ -173,7 +188,7 @@ mess_pas <- function(T, tr, r, ml, ctx) {
     newv <- paste0(sub("^V", "V9", a$visit_number))
     a11 <- a[, .(message_id = NA_integer_, event_type = "A11", event_datetime = event_datetime + hours(runif(.N, 1, 3)), recorded_datetime = event_datetime + hours(runif(.N, 1, 3)) + mins(5), mrn, visit_number, site_code,
                  ward, bed = NA_character_, consultant_code, specialty_code, admission_method = NA_character_, admission_source = NA_character_, intended_management, patient_class, decision_to_admit_date = as.Date(NA),
-                 discharge_method = NA_character_, discharge_destination = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
+                 discharge_method = NA_character_, discharge_destination = NA_character_, planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
     a01b <- copy(a); a01b[, `:=`(message_id = NA_integer_, visit_number = newv, event_datetime = event_datetime + hours(runif(.N, 3, 5)), ward = "AMU 2")]
     a01b[, recorded_datetime := event_datetime + mins(runif(.N, 0, 10))]
     later <- ev[visit_number %in% v & event_type %in% c("A02", "A03", "A08")]
@@ -212,7 +227,7 @@ mess_pas <- function(T, tr, r, ml, ctx) {
     a <- ev[i]; wards <- ctx$ref$wards[kind == "bed", ward_name]
     wrong <- a[, .(message_id = NA_integer_, event_type = "A02", event_datetime = event_datetime - mins(runif(.N, 1, 3)), recorded_datetime = event_datetime - mins(runif(.N, 0, 2)), mrn, visit_number, site_code,
                    ward = sample(wards, .N, TRUE), bed = NA_character_, consultant_code, specialty_code, admission_method = NA_character_, admission_source = NA_character_, intended_management, patient_class,
-                   decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
+                   decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
     new <- wrong
     if (code == "M-BOUNCE-10") {
       back <- copy(a); back[, `:=`(message_id = NA_integer_, event_datetime = wrong$event_datetime + mins(2), recorded_datetime = wrong$event_datetime + mins(3))]
@@ -230,7 +245,7 @@ mess_pas <- function(T, tr, r, ml, ctx) {
     a <- ev[event_type == "A01" & visit_number %in% med$visit_number[i]]
     mk <- function(k, spec) a[, .(message_id = NA_integer_, event_type = "A08", event_datetime = event_datetime + hours(k * runif(.N, 0.6, 1.3)), recorded_datetime = event_datetime + hours(k * runif(.N, 0.6, 1.3)) + mins(3), mrn, visit_number, site_code,
                                   ward = NA_character_, bed = NA_character_, consultant_code, specialty_code = spec, admission_method = NA_character_, admission_source = NA_character_, intended_management, patient_class,
-                                  decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
+                                  decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
     log_mess(ml, "M-BOUNCE-11", "pas_adt_events", a$message_id, "specialty_code", "300", "specialty flips 300/430/300/430 in a morning; only the last is a transfer of care")
     ev <- reseq(rbind(ev, mk(1, "430"), mk(2, "300"), mk(3, "430")))
   }
@@ -256,7 +271,7 @@ mess_pas <- function(T, tr, r, ml, ctx) {
     if (nrow(last)) {
       up <- last[, .(message_id = NA_integer_, event_type = "A08", event_datetime = event_datetime + days(runif(.N, 2, 20)), recorded_datetime = event_datetime + days(runif(.N, 2, 20)) + mins(1), mrn, visit_number, site_code,
                      ward = NA_character_, bed = NA_character_, consultant_code, specialty_code, admission_method = NA_character_, admission_source = NA_character_, intended_management, patient_class,
-                     decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
+                     decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_, discharge_ready_date = as.Date(NA), prior_mrn = NA_character_)]
       log_mess(ml, "M-PAS-15", "pas_adt_events", last$message_id, "event_datetime", chr(last$event_datetime), "a demographic update recorded after the date of death")
       ev <- reseq(rbind(ev, up))
     }
@@ -266,6 +281,29 @@ mess_pas <- function(T, tr, r, ml, ctx) {
   for (k in seq_len(nrow(ren))) ev[ward == ren$ward_name[k] & event_datetime < as_dt(ren$valid_from[k]), ward := ren$old_name[k]]
   i <- ev[, which(!is.na(ward) & !(ward %in% c("ED", "ICU", "HDU", "SAU", "SDEC", "CCU", "UTC")))]; i <- i[runif(length(i)) < r("M-PAS-09")]
   if (length(i)) { log_mess(ml, "M-PAS-09", "pas_adt_events", ev$message_id[i], "ward", ev$ward[i], "ward name typed differently"); ev[i, ward := ward_variant(ward)] }
+  # discharge pathway recording. M-PAS-17: a P1-P3 pathway was planned but the
+  # ward never confirmed the actual one, so the A03 went out with it blank.
+  i <- ev[, which(event_type == "A03" & planned_discharge_pathway %in% c("P1", "P2", "P3") & !is.na(discharge_pathway))]
+  i <- i[runif(length(i)) < r("M-PAS-17")]
+  if (length(i)) { log_mess(ml, "M-PAS-17", "pas_adt_events", ev$message_id[i], "discharge_pathway", ev$discharge_pathway[i], "pathway planned but not confirmed at discharge; actual pathway blank")
+    ev[i, discharge_pathway := NA_character_] }
+  # M-PAS-18: a P1-P3 discharge agreed on the day, with no plan ever recorded
+  i <- ev[, which(event_type == "A03" & discharge_pathway %in% c("P1", "P2", "P3") & !is.na(planned_discharge_pathway))]
+  i <- i[runif(length(i)) < r("M-PAS-18")]
+  if (length(i)) { log_mess(ml, "M-PAS-18", "pas_adt_events", ev$message_id[i], "planned_discharge_pathway", ev$planned_discharge_pathway[i], "pathway agreed on the day of discharge; no planned pathway recorded")
+    ev[i, planned_discharge_pathway := NA_character_] }
+  # M-PAS-19: the pathway typed in another form (1, Pathway 1, p1, P 1)
+  for (f in c("planned_discharge_pathway", "discharge_pathway")) {
+    i <- ev[, which(event_type == "A03" & !is.na(get(f)))]
+    i <- i[runif(length(i)) < r("M-PAS-19")]
+    if (length(i)) { log_mess(ml, "M-PAS-19", "pas_adt_events", ev$message_id[i], f, ev[[f]][i], "pathway typed in a different form")
+      set(ev, i, f, pathway_variant(ev[[f]][i])) }
+  }
+  # M-PAS-20: discharge ready date keyed after the event and defaulted to the discharge date
+  i <- ev[, which(event_type == "A03" & !is.na(discharge_ready_date) & discharge_ready_date < as.Date(event_datetime))]
+  i <- i[runif(length(i)) < r("M-PAS-20")]
+  if (length(i)) { log_mess(ml, "M-PAS-20", "pas_adt_events", ev$message_id[i], "discharge_ready_date", chr(ev$discharge_ready_date[i]), "entered retrospectively and defaulted to the discharge date; the delay disappears")
+    ev[i, discharge_ready_date := as.Date(event_datetime)] }
   T$pas_adt_events <- ev; tr$spells <- sp
   list(T = T, tr = tr)
 }
@@ -581,7 +619,7 @@ mess_identity <- function(T, tr, r, ml, ctx) {
       a40 <- ev[mrn %in% m$mrn | mrn %in% m$old_mrn][, .SD[1], by = visit_number][, .(message_id = NA_integer_, event_type = "A40", event_datetime = m$split[match(ifelse(mrn %in% m$mrn, mrn, m$mrn[match(mrn, m$old_mrn)]), m$mrn)] + days(runif(.N, 1, 30)),
                                                                                        mrn = ifelse(mrn %in% m$mrn, mrn, m$mrn[match(mrn, m$old_mrn)]), visit_number = NA_character_, site_code = "RZ901", ward = NA_character_, bed = NA_character_, consultant_code = NA_character_,
                                                                                        specialty_code = NA_character_, admission_method = NA_character_, admission_source = NA_character_, intended_management = NA_character_, patient_class = NA_character_,
-                                                                                       decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, discharge_ready_date = as.Date(NA))]
+                                                                                       decision_to_admit_date = as.Date(NA), discharge_method = NA_character_, discharge_destination = NA_character_, planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_, discharge_ready_date = as.Date(NA))]
       a40 <- a40[!duplicated(mrn)]
       a40[, prior_mrn := m$old_mrn[match(mrn, m$mrn)]]
       a40[, recorded_datetime := event_datetime + mins(1)]

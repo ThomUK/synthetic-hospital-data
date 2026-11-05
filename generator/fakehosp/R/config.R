@@ -78,3 +78,53 @@ daily_counts <- function(annual, dates, start, month_idx, dow_w) {
   lam <- annual / 365.25 * month_idx[pmin(mi, length(month_idx))] * dow_w[wd] / mean(dow_w)
   rpois(length(dates), lam)
 }
+
+#' Default discharge pathway shape
+#'
+#' How inpatient discharges split across the discharge-to-assess pathways
+#' (P0 home with no new support, P1 home with new or more support, P2 a
+#' short-term bed, P3 long-term care) and how the planned pathway, the
+#' discharge ready date and the destination follow from them. Deaths and
+#' day cases have no pathway. Every figure is an assumption documented in
+#' docs/CALIBRATION.md section 9; override any element to reshape a run.
+#' @export
+default_discharge_pathways <- function() {
+  list(
+    # share of live inpatient discharges planned for each pathway, by age band
+    planned_by_age = list(
+      `0-64`  = c(P0 = 0.94, P1 = 0.050, P2 = 0.008, P3 = 0.002),
+      `65-74` = c(P0 = 0.82, P1 = 0.140, P2 = 0.030, P3 = 0.010),
+      `75-84` = c(P0 = 0.64, P1 = 0.260, P2 = 0.070, P3 = 0.030),
+      `85+`   = c(P0 = 0.45, P1 = 0.350, P2 = 0.120, P3 = 0.080)
+    ),
+    age_breaks = c(65, 75, 85),
+    # elective spells need less support: the P1-P3 shares are scaled by this and P0 takes the rest
+    elective_support_factor = 0.40,
+    # the pathway the patient actually left on, given the one planned (rows planned, columns actual)
+    actual_given_planned = matrix(c(
+      0.97, 0.03, 0.00, 0.00,
+      0.12, 0.80, 0.06, 0.02,
+      0.00, 0.15, 0.75, 0.10,
+      0.00, 0.02, 0.10, 0.88
+    ), nrow = 4, byrow = TRUE, dimnames = list(c("P0", "P1", "P2", "P3"), c("P0", "P1", "P2", "P3"))),
+    # share of each planned pathway that is written down before discharge; simple discharges mostly are not
+    planned_recorded = c(P0 = 0.35, P1 = 0.97, P2 = 0.98, P3 = 0.99),
+    # days from no longer meeting the criteria to reside to discharge, by actual pathway:
+    # share with no delay, then the lognormal median and sigma of the delay when there is one
+    delay = list(
+      P0 = c(zero = 0.85, median = 1, sigma = 0.6),
+      P1 = c(zero = 0.30, median = 2, sigma = 0.8),
+      P2 = c(zero = 0.10, median = 5, sigma = 0.7),
+      P3 = c(zero = 0.05, median = 9, sigma = 0.7)
+    ),
+    # share of discharges whose discharge ready date is recorded on the A03, by actual pathway
+    ready_date_recorded = c(P0 = 0.25, P1 = 0.90, P2 = 0.95, P3 = 0.95),
+    # HES discharge destination given the actual pathway (codes and weights)
+    destination = list(
+      P0 = list(codes = c("19", "29", "51"), weights = c(93, 3, 4)),
+      P1 = list(codes = c("19", "29"), weights = c(96, 4)),
+      P2 = list(codes = c("51", "87"), weights = c(70, 30)),
+      P3 = list(codes = c("54", "85"), weights = c(60, 40))
+    )
+  )
+}

@@ -34,7 +34,8 @@ TYPES = {
     "mess_log": {"mess_row": I},
 }
 TRUTH_TYPES = {
-    "spells": {"admit": TS, "discharge": TS, "los": "DOUBLE", "died": "BOOLEAN", "day_case": "BOOLEAN", "endoscopy": "BOOLEAN", "n_episodes": I, "open_at_end": "BOOLEAN", "cancelled": "BOOLEAN"},
+    "spells": {"admit": TS, "discharge": TS, "los": "DOUBLE", "died": "BOOLEAN", "day_case": "BOOLEAN", "endoscopy": "BOOLEAN", "n_episodes": I, "open_at_end": "BOOLEAN", "cancelled": "BOOLEAN",
+               "discharge_ready_date": D},
     "stays": {"from": TS, "to": TS, "seq": I}, "ed_admitted": {"admitted": "BOOLEAN"}, "mrn_aliases": {"merged": "BOOLEAN"},
     "imaging_links": {}, "endoscopy_links": {},
 }

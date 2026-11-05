@@ -6,7 +6,7 @@ daycase_prob <- c("300"=0.55,"430"=0.3,"320"=0.7,"340"=0.5,"301"=0.95,"361"=0.8,
 elective_mix <- c("110"=14,"100"=10,"104"=5,"101"=11,"130"=10,"120"=6,"502"=8,"301"=8,"320"=6,"420"=3,"107"=2,"361"=4,"410"=1,"400"=2,"300"=5,"340"=3,"430"=1)
 planned_mix  <- c("301"=25,"320"=12,"361"=15,"100"=8,"101"=12,"420"=8,"400"=5,"110"=5,"104"=5,"340"=5)
 
-generate_admissions <- function(pts, ref, vol, scale, seed, start, end, ed, op, verbose = FALSE) {
+generate_admissions <- function(pts, ref, vol, scale, seed, start, end, ed, op, verbose = FALSE, pathways = default_discharge_pathways()) {
   stage_seed(seed, 5L)
   start <- as.Date(start); end <- as.Date(end)
   sp <- ref$specialties
@@ -112,7 +112,9 @@ generate_admissions <- function(pts, ref, vol, scale, seed, start, end, ed, op, 
   spl[died == FALSE & day_case == FALSE & los >= 1, discharge := weekday_shift(discharge, 0.35)]
   spl[, los := as.numeric(as.Date(discharge) - as.Date(admit))]
   spl[, discharge_method := ifelse(died, "4", rcat(.N, c("1", "6", "7"), c(97.5, 2, 0.5)))]
-  spl[, discharge_destination := ifelse(died, "79", ifelse(age >= 75 & runif(.N) < 0.12, rcat(.N, c("54", "85"), c(7, 5)), rcat(.N, c("19", "29", "51"), c(93, 3, 4))))]
+  # discharge pathway (planned, then actual), the discharge ready date and the destination that follows
+  spl <- assign_discharge_pathways(spl, pathways)
+  spl[died == TRUE, discharge_destination := "79"]
   spl[, admission_source := ifelse(admission_method == "2B", "51", ifelse(age >= 75 & runif(.N) < 0.08, "54", rcat(.N, c("19", "29"), c(97, 3))))]
   # keep spells that touch the window
   spl <- spl[as.Date(admit) <= end & as.Date(discharge) >= start]
@@ -226,12 +228,12 @@ generate_admissions <- function(pts, ref, vol, scale, seed, start, end, ed, op, 
                   stays[, .SD[which.max(seq)], by = visit_number][, .(visit_number, ward)], by = "visit_number")
   events <- rbindlist(ev, use.names = TRUE, fill = TRUE)
   events <- merge(events, spl[, .(visit_number, mrn, site_code, admission_method, admission_source, intended_management, patient_class,
-                                  decision_to_admit_date, discharge_method, discharge_destination, los, died)], by = "visit_number")
+                                  decision_to_admit_date, discharge_method, discharge_destination, planned_discharge_pathway, discharge_pathway,
+                                  discharge_ready_date, los, died)], by = "visit_number")
   # a specialty/consultant change in A08 means the earlier events carry the first episode's values (already so)
   events[event_type != "A01", `:=`(admission_method = NA_character_, admission_source = NA_character_, decision_to_admit_date = as.Date(NA))]
-  events[event_type != "A03", `:=`(discharge_method = NA_character_, discharge_destination = NA_character_)]
-  events[, discharge_ready_date := as.Date(NA)]
-  events[event_type == "A03" & los >= 7 & died == FALSE & runif(.N) < 0.35, discharge_ready_date := as.Date(event_datetime) - round(rln(.N, 3, 0.8))]
+  events[event_type != "A03", `:=`(discharge_method = NA_character_, discharge_destination = NA_character_,
+                                   planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_, discharge_ready_date = as.Date(NA))]
   events[event_type %in% c("A01", "A02"), bed := bed(.N)]
   events[event_type %in% c("A01", "A02") & ward %in% c("Discharge Lounge", "ED"), bed := NA_character_]
   events[, recorded_datetime := event_datetime + mins(runif(.N, 0, 10))]
@@ -240,10 +242,70 @@ generate_admissions <- function(pts, ref, vol, scale, seed, start, end, ed, op, 
   events[, message_id := .I]
   events <- events[, .(message_id, event_type, event_datetime, recorded_datetime, mrn, visit_number, site_code, ward, bed,
                        consultant_code, specialty_code, admission_method, admission_source, intended_management, patient_class,
-                       decision_to_admit_date, discharge_method, discharge_destination, discharge_ready_date, prior_mrn)]
+                       decision_to_admit_date, discharge_method, discharge_destination, planned_discharge_pathway, discharge_pathway,
+                       discharge_ready_date, prior_mrn)]
   vmsg(verbose, "ADT events: ", nrow(events))
   # linked RTT clock stops
   rtt_stops <- rbind(spl[!is.na(rtt_pathway_id), .(referral_id, admit_date = as.Date(admit))],
                      wl_pre[!is.na(rtt_pathway_id), .(referral_id, admit_date)])
   list(spells = spl, stays = stays, events = events, rtt_stops = rtt_stops)
+}
+
+
+# Planned and actual discharge pathway, discharge ready date and destination
+# for every spell, from the shape in default_discharge_pathways(). Deaths and
+# day cases have no pathway; the ready date is never before the admission
+# date nor after the discharge date, and a delay longer than the planned stay
+# lengthens the stay.
+assign_discharge_pathways <- function(spl, pw) {
+  codes <- c("P0", "P1", "P2", "P3")
+  spl[, `:=`(planned_discharge_pathway = NA_character_, discharge_pathway = NA_character_,
+             discharge_ready_date = as.Date(NA), discharge_destination = NA_character_)]
+  live <- spl[, which(died == FALSE & day_case == FALSE)]
+  n <- length(live)
+  if (n == 0L) {
+    spl[died == TRUE, discharge_destination := "79"]
+    spl[died == FALSE & day_case == TRUE, discharge_destination := rcat(.N, c("19", "29"), c(97, 3))]
+    return(spl)
+  }
+  # planned pathway: shares by age band, with less support after elective admissions
+  band <- as.integer(cut(spl$age[live], breaks = c(-Inf, pw$age_breaks, Inf), right = FALSE))
+  shares <- do.call(rbind, pw$planned_by_age)[band, , drop = FALSE]
+  elective <- spl$emergency[live] == FALSE
+  shares[elective, -1] <- shares[elective, -1, drop = FALSE] * pw$elective_support_factor
+  shares[, 1] <- 1 - rowSums(shares[, -1, drop = FALSE])
+  cum <- t(apply(shares, 1, cumsum))
+  planned <- codes[pmin(rowSums(cum < runif(n)) + 1L, 4L)]
+  # actual pathway given the planned one, then what follows from the actual one
+  actual <- planned
+  delay <- numeric(n)
+  dest <- character(n)
+  for (p in codes) {
+    k <- which(planned == p)
+    if (length(k)) actual[k] <- rcat(length(k), codes, pw$actual_given_planned[p, ])
+  }
+  for (a in codes) {
+    k <- which(actual == a)
+    if (!length(k)) next
+    z <- pw$delay[[a]]
+    delay[k] <- ifelse(runif(length(k)) < z[["zero"]], 0, round(rln(length(k), z[["median"]], z[["sigma"]])))
+    dest[k] <- rcat(length(k), pw$destination[[a]]$codes, pw$destination[[a]]$weights)
+  }
+  # a delay longer than the stay so far extends the stay: the patient was ready
+  # on the day of admission at the earliest and the bed is held until the
+  # pathway is in place
+  los_days <- as.numeric(as.Date(spl$discharge[live]) - as.Date(spl$admit[live]))
+  extend <- pmax(delay - los_days, 0)
+  new_discharge <- spl$discharge[live] + days(extend)
+  ready <- as.Date(new_discharge) - delay
+  recorded <- runif(n) < pw$planned_recorded[planned]
+  has_ready <- runif(n) < pw$ready_date_recorded[actual]
+  ready[!has_ready] <- NA
+  planned_recorded <- ifelse(recorded, planned, NA_character_)
+  spl[live, `:=`(discharge = new_discharge, planned_discharge_pathway = planned_recorded, discharge_pathway = actual,
+                 discharge_ready_date = ready, discharge_destination = dest)]
+  spl[, los := as.numeric(as.Date(discharge) - as.Date(admit))]
+  spl[died == TRUE, discharge_destination := "79"]
+  spl[died == FALSE & day_case == TRUE, discharge_destination := rcat(.N, c("19", "29"), c(97, 3))]
+  spl
 }
