@@ -5,14 +5,14 @@
 \title{Read a version's manifest}
 \usage{
 fh_manifest(
-  version = "v2",
+  version = "v3",
   cache = fh_cache_dir(),
   refresh = FALSE,
   source = c("pages", "release")
 )
 }
 \arguments{
-\item{version}{Dataset version, such as \code{"v2"}.}
+\item{version}{Dataset version, such as \code{"v3"}.}
 
 \item{cache}{Cache directory, see \code{\link[=fh_cache_dir]{fh_cache_dir()}}.}
 

@@ -7,7 +7,7 @@
 fh_read(
   table,
   scale = c("sample", "full"),
-  version = "v2",
+  version = "v3",
   cache = fh_cache_dir(),
   quiet = TRUE
 )
@@ -18,7 +18,7 @@ fh_read(
 \item{scale}{\code{"sample"} (5\% of patients, served by GitHub Pages) or
 \code{"full"} (every row, from the GitHub release).}
 
-\item{version}{Dataset version, such as \code{"v2"}.}
+\item{version}{Dataset version, such as \code{"v3"}.}
 
 \item{cache}{Cache directory, see \code{\link[=fh_cache_dir]{fh_cache_dir()}}.}
 

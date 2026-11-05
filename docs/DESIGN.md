@@ -619,7 +619,7 @@ Patterns the generator builds in, with sources where they exist:
   by financial year, uploaded by a workflow that rebuilds the set from the
   seed and checks it against the committed manifest) and the **5% sample
   lives in the repository** under
-  `data/v2/sample/` and is served by Pages. `data/README.md` has the URLs
+  `data/v3/sample/` and is served by Pages. `data/README.md` has the URLs
   and read examples.
 - **A `sample/` partition alongside `full/`**: a 5% sample of *patients*
   (about 40,000) with all of their activity across every table, so joins
@@ -642,10 +642,11 @@ Patterns the generator builds in, with sources where they exist:
   `fakehosp`) wraps this: `fh_tables()`, `fh_read("spells")`, and
   `fh_connect(scale = "sample")` which returns a DuckDB connection with
   every table attached as a view so joins run locally.
-- **Python:** `duckdb.sql("select ... from 'https://thomuk.github.io/synthetic-hospital-data/data/v2/full/spells.parquet'")`
+- **Python:** `duckdb.sql("select ... from 'https://thomuk.github.io/synthetic-hospital-data/data/v3/full/spells.parquet'")`
   or `pandas.read_parquet(url)`. Documented in the README; no package.
-- **Versioning:** `data/v2/` is immutable once published. A regenerated or
-  reshaped dataset goes to `data/v2/` with its own manifest. Other projects
+- **Versioning:** a published `data/<version>/` is immutable. A
+  regenerated or reshaped dataset goes to the next version directory with
+  its own manifest; `data/README.md` keeps the version table. Other projects
   pin a version.
 
 ## 9. The generator
@@ -685,7 +686,7 @@ Patterns the generator builds in, with sources where they exist:
 1. This design, the calibration note and the mess catalogue (done).
 2. R package with the clean generator and tests (done; `generate(mess = NULL)`).
 3. Mess injection and `mess_log` (done; `generate()` with `default_mess_rates()`).
-4. Derive and aggregate SQL; Parquet build; manifest; sample partition; CSV zip; publication (done; `generator/build.py`, `sql/`, sample under `data/v2/`, full set released by `.github/workflows/release.yml`).
+4. Derive and aggregate SQL; Parquet build; manifest; sample partition; CSV zip; publication (done; `generator/build.py`, `sql/`, sample under `data/v3/`, full set released by `.github/workflows/release.yml`).
 5. Browser console and explainer page; card on the root `index.html`; README row.
 6. R helper package and R/Python access docs.
 

@@ -6,7 +6,7 @@
 \usage{
 fh_download(
   scale = c("sample", "full"),
-  version = "v2",
+  version = "v3",
   tables = NULL,
   cache = fh_cache_dir(),
   quiet = FALSE
@@ -16,7 +16,7 @@ fh_download(
 \item{scale}{\code{"sample"} (5\% of patients, served by GitHub Pages) or
 \code{"full"} (every row, from the GitHub release).}
 
-\item{version}{Dataset version, such as \code{"v2"}.}
+\item{version}{Dataset version, such as \code{"v3"}.}
 
 \item{tables}{Optional character vector of tables to fetch, as
 \code{layer/name} (for example \code{"derived/spells"}) or just \code{name}; default

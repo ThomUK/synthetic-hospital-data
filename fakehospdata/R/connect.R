@@ -21,7 +21,7 @@
 #' DBI::dbDisconnect(con, shutdown = TRUE)
 #' }
 #' @export
-fh_connect <- function(scale = c("sample", "full"), version = "v2", tables = NULL,
+fh_connect <- function(scale = c("sample", "full"), version = "v3", tables = NULL,
                        cache = fh_cache_dir(), quiet = FALSE, ...) {
   scale <- match.arg(scale)
   tabs <- fh_download(scale, version, tables, cache, quiet)
@@ -50,7 +50,7 @@ fh_connect <- function(scale = c("sample", "full"), version = "v2", tables = NUL
 #' spells <- fh_read("spells", "sample")
 #' }
 #' @export
-fh_read <- function(table, scale = c("sample", "full"), version = "v2", cache = fh_cache_dir(), quiet = TRUE) {
+fh_read <- function(table, scale = c("sample", "full"), version = "v3", cache = fh_cache_dir(), quiet = TRUE) {
   scale <- match.arg(scale)
   con <- fh_connect(scale, version, tables = table, cache = cache, quiet = quiet)
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)

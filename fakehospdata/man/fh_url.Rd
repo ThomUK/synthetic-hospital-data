@@ -8,8 +8,8 @@ fh_url(path)
 }
 \arguments{
 \item{path}{A path as listed in the manifest, such as
-\code{"v2/sample/layer1/pas_patients.parquet"} or
-\code{"v2/full/layer1/pas_adt_events/fy2024.parquet"}.}
+\code{"v3/sample/layer1/pas_patients.parquet"} or
+\code{"v3/full/layer1/pas_adt_events/fy2024.parquet"}.}
 }
 \value{
 A URL.
@@ -21,6 +21,6 @@ cannot be nested, so an asset is named by its path under \verb{full/} with \code
 replaced by \verb{__}.
 }
 \examples{
-fh_url("v2/sample/derived/spells.parquet")
-fh_url("v2/full/layer1/pas_adt_events/fy2024.parquet")
+fh_url("v3/sample/derived/spells.parquet")
+fh_url("v3/full/layer1/pas_adt_events/fy2024.parquet")
 }

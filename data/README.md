@@ -7,7 +7,7 @@ generated: no row describes a real person, and every NHS number carries the
 ## Layout
 
 ```
-data/v2/
+data/v3/
   manifest.json              every file with rows, bytes and SHA-256; the generator seed and parameters
   sample/                    5% of patients with all of their rows, derived and aggregate layers recomputed
     layer1/<table>.parquet   the nine source-system extracts (messy)
@@ -38,8 +38,8 @@ is the asset `derived__spells.parquet`, and
 `layer1__pas_op_status_log__fy2024.parquet`. `manifest.json` lists every
 path. The Parquet files are canonical; the CSV zip is a convenience.
 
-Release page: `https://github.com/ThomUK/synthetic-hospital-data/releases/tag/v2`
-Asset URL pattern: `https://github.com/ThomUK/synthetic-hospital-data/releases/download/v2/<asset>`
+Release page: `https://github.com/ThomUK/synthetic-hospital-data/releases/tag/v3`
+Asset URL pattern: `https://github.com/ThomUK/synthetic-hospital-data/releases/download/v3/<asset>`
 
 The release is produced by the `Synthetic hospital dataset release`
 workflow (`.github/workflows/release.yml`), which
@@ -60,13 +60,13 @@ corrected in the derived layer.
 ## Reading it
 
 Base URL for the sample:
-`https://thomuk.github.io/synthetic-hospital-data/data/v2/sample/`
+`https://thomuk.github.io/synthetic-hospital-data/data/v3/sample/`
 
 Python, with DuckDB:
 
 ```python
 import duckdb
-base = "https://thomuk.github.io/synthetic-hospital-data/data/v2/sample/"
+base = "https://thomuk.github.io/synthetic-hospital-data/data/v3/sample/"
 duckdb.sql(f"""
   SELECT tretspef_first, count(*) AS spells, median(speldur) AS median_los
   FROM read_parquet('{base}derived/spells.parquet')
@@ -80,7 +80,7 @@ R, with DuckDB (the httpfs extension loads automatically for URLs):
 
 ```r
 library(duckdb); con <- dbConnect(duckdb())
-base <- "https://thomuk.github.io/synthetic-hospital-data/data/v2/sample/"
+base <- "https://thomuk.github.io/synthetic-hospital-data/data/v3/sample/"
 dbGetQuery(con, sprintf("SELECT count(*) FROM read_parquet('%sderived/spells.parquet')", base))
 ```
 
@@ -111,6 +111,7 @@ pin the version in their URLs.
 
 | Version | Built | What changed |
 | --- | --- | --- |
+| v3 | 2026-11-05 | Discharge pathways: the A03 discharge event carries planned_discharge_pathway and discharge_pathway (P0-P3), the discharge ready date is populated for most supported discharges with a pathway-dependent delay, and the destination follows the pathway; derived.spells gains planned_discharge_pathway, discharge_pathway and discharge_delay_days. Four new PAS mess entries: M-PAS-17 planned pathway without an actual, M-PAS-18 actual pathway without a plan, M-PAS-19 pathways typed in other forms, M-PAS-20 ready date defaulted to the discharge date. |
 | v2 | 2026-10-21 | Same seed and parameters as v1, rebuilt after the move to this repository with the beds reference table, the `fake_` prefix kept on every NHS number variant, unique MRNs for duplicate registrations, unique clinic codes and zero-padded patient source setting codes. |
 | v1 | 2026-10-21 | First build, superseded the same day and not published here: 460 MRNs belonged to two people and the derived layer carried duplicate rows for them. |
 
@@ -119,13 +120,13 @@ pin the version in their URLs.
 ```sh
 Rscript generator/run.R <run_dir> 800000 20230401      # layer 1 as CSV, about 9 minutes
 python3 generator/build.py --input <run_dir> --out data  # Parquet, derived and aggregate layers, sample, manifest, about 1.5 minutes
-python3 generator/check_manifest.py data/v2/manifest.json <rebuilt>/v2/manifest.json  # row counts must match
+python3 generator/check_manifest.py data/v3/manifest.json <rebuilt>/v3/manifest.json  # row counts must match
 ```
 
 Full-set download in Python, straight from the release:
 
 ```python
 import duckdb
-rel = "https://github.com/ThomUK/synthetic-hospital-data/releases/download/v2/"
+rel = "https://github.com/ThomUK/synthetic-hospital-data/releases/download/v3/"
 duckdb.sql(f"SELECT count(*) FROM read_parquet('{rel}derived__spells.parquet')").show()
 ```

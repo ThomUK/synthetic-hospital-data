@@ -2,8 +2,8 @@
 
 ![Fake NHS Trust: a glass hospital with floating table schemas and charts](docs/images/fake-nhs-trust.png)
 
-**Status: v2 published.** The sample is in `data/v2/`, the full set is on
-the [v2 release](https://github.com/ThomUK/synthetic-hospital-data/releases/tag/v2),
+**Status: v3 published.** The sample is in `data/v3/`, the full set is on
+the [v3 release](https://github.com/ThomUK/synthetic-hospital-data/releases/tag/v3),
 and the [project page](https://thomuk.github.io/synthetic-hospital-data/)
 [table viewer](https://thomuk.github.io/synthetic-hospital-data/viewer/)
 and [ERDs](https://thomuk.github.io/synthetic-hospital-data/erd/) are live. The R helper package

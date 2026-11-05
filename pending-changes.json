@@ -1,9 +1,6 @@
 {
-  "published_version": "v2",
-  "published_build": "2026-10-21",
-  "note": "The generator has moved on since v2 was built. These changes are in the code but not in the published data; the dataset will be regenerated as the next version when the list is complete.",
-  "changes": [
-    "Discharge pathways: the A03 discharge event carries planned_discharge_pathway and discharge_pathway (P0-P3), the discharge ready date is populated for most supported discharges with a pathway-dependent delay, and the destination follows the pathway; derived.spells gains planned_discharge_pathway, discharge_pathway and discharge_delay_days.",
-    "Four new PAS mess entries: M-PAS-17 planned pathway without an actual, M-PAS-18 actual pathway without a plan, M-PAS-19 pathways typed in other forms, M-PAS-20 ready date defaulted to the discharge date."
-  ]
+  "published_version": "v3",
+  "published_build": "2026-11-05",
+  "note": "The generator has moved on since v3 was built. These changes are in the code but not in the published data; the dataset will be regenerated as the next version when the list is complete.",
+  "changes": []
 }

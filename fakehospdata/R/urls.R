@@ -23,12 +23,12 @@ fh_cache_dir <- function() {
 #' replaced by `__`.
 #'
 #' @param path A path as listed in the manifest, such as
-#'   `"v2/sample/layer1/pas_patients.parquet"` or
-#'   `"v2/full/layer1/pas_adt_events/fy2024.parquet"`.
+#'   `"v3/sample/layer1/pas_patients.parquet"` or
+#'   `"v3/full/layer1/pas_adt_events/fy2024.parquet"`.
 #' @return A URL.
 #' @examples
-#' fh_url("v2/sample/derived/spells.parquet")
-#' fh_url("v2/full/layer1/pas_adt_events/fy2024.parquet")
+#' fh_url("v3/sample/derived/spells.parquet")
+#' fh_url("v3/full/layer1/pas_adt_events/fy2024.parquet")
 #' @export
 fh_url <- function(path) {
   parts <- strsplit(path, "/", fixed = TRUE)

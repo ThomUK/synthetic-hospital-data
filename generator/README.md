@@ -77,7 +77,7 @@ and are not published. Rebuilding takes about 1.5 minutes on four cores
 for the full set. The build ends by writing `preview/sample/` (the first
 100 rows of every sample table as JSON) for the table viewer; `preview.py`
 also runs on its own against a build directory or the repository's
-`data/v2`.
+`data/v3`.
 
 ## The ERD is built from the data
 
@@ -105,8 +105,9 @@ list when the next version is built and published.
 
 ## Publishing a new version
 
-Everything below has been done for v1, v2 and v3 from a cloud session; it
-is the procedure, with timings, for the next one. The published sample
+Everything below has been done for every version so far from a cloud
+session; it is the procedure, with timings, for the next one. Where the
+text says `vN`, read the version being published. The published sample
 lives in the repository under `data/<version>/`; the full set is attached
 to a GitHub release by the `Dataset release` workflow, which a session
 cannot do itself (its token may not create releases), so the runner
@@ -117,23 +118,26 @@ rebuilds the data from the seed and uploads it.
    the generator has changed since the last build; that list becomes the
    new version's row in the table in `data/README.md`.
 2. **Run the pipeline** from the repository root:
-   `generator/publish_version.sh v3 /some/work/dir`. It installs the R
+   `generator/publish_version.sh vN /some/work/dir`. It installs the R
    package into a private library, generates layer 1 at full scale
    (about 9 minutes, 12 GB of RAM, 4.6 GB of CSV in the work dir), builds
    the Parquet, derived and aggregate layers, the 5% sample, the previews
    and `erd.json` (about 2 minutes), copies the sample set into
-   `data/v3/`, removes `data/v2/`, runs `new_version.py v3` to point
-   every path, default and the reader package at v3, and runs the JS
+   `data/vN/`, removes the previous version's directory, runs
+   `new_version.py vN` to point every path, default and the reader
+   package at `vN`, and runs the JS
    tests. Run it in the background with the log in a file: it takes about
    12 minutes. Do not run anything else heavy alongside it; the generator
    peaks at 12 GB on a 15 GB machine.
-3. **Check the result.** `git status` should show `data/v3/` added,
-   `data/v2/` deleted, and small edits to the files that name the version
+3. **Check the result.** `git status` should show `data/vN/` added, the
+   previous directory deleted, and small edits to the files that name the version
    (`index.html`, `viewer/app.js`, `erd/app.js`, `README.md`,
    `data/README.md`, `CLAUDE.md`, `.github/workflows/release.yml`,
    `generator/build.py`, the `fakehospdata` defaults and tests,
-   `pending-changes.json` now empty for v3). Then run the R tests:
-   `cd generator/fakehosp && R_LIBS_USER=<work>/rlib Rscript -e 'testthat::test_dir("tests/testthat")'`
+   `pending-changes.json` now empty for `vN`). Then run the R tests:
+   `cd generator/fakehosp && R_LIBS_USER=<work>/rlib Rscript -e 'library(fakehosp); testthat::test_dir("tests/testthat")'`
+   (the package must be attached first: two test files call its functions
+   unqualified and error with "could not find function" otherwise)
    (about 5 minutes). The reader package's tests (`testthat::test_local(".")`
    in `fakehospdata/`) need the `duckdb` R package, which the cloud
    container cannot install (no CRAN access, not in the Ubuntu archive), so
@@ -144,27 +148,29 @@ rebuilds the data from the seed and uploads it.
    `banner.js` stops showing the out-of-sync notice because the pending
    list is empty.
 5. **Release the full set.** Run the `Dataset release` workflow
-   (`.github/workflows/release.yml`) with `version=v3`: from the Actions
-   tab, or `gh workflow run release.yml -f version=v3`, or the GitHub MCP
+   (`.github/workflows/release.yml`) with `version=vN`: from the Actions
+   tab, or `gh workflow run release.yml -f version=vN`, or the GitHub MCP
    `actions_run_trigger` tool. The runner installs the same toolchain,
    regenerates from the seed, builds, runs `check_manifest.py` against the
-   committed `data/v3/manifest.json` (every row count must match or the
+   committed `data/vN/manifest.json` (every row count must match or the
    job fails; checksums are reported only, because Parquet bytes differ
    between machines) and uploads one asset per Parquet file with
    `publish_release.sh`, plus the rebuilt manifest. About 10 minutes.
 6. **Verify**: the release page lists 77 assets of about 1 GB; download
    one asset and query it; the project page, viewer and ERD page load the
-   new version.
+   new version. Check `https://github.com/ThomUK/synthetic-hospital-data/releases/tag/vN`.
 
 Things that have gone wrong before, so you do not repeat them: the
 runner's R library is read-only without `sudo` (the workflow has it); the
 Pages site had to be enabled once in the repository settings before the
 deploy workflow could run; a full run that fails late is usually a mess
-step tripping on an edge case the small test runs never hit (the first v2
-run failed on an unparseable date), so read the tail of `run.log`; the
+step tripping on an edge case the small test runs never hit (the first
+full run of the second version failed on an unparseable date), so read
+the tail of `run.log`; the
 Python build's default `--version` and every page path are updated by
-`new_version.py`, not by hand; and `data/<version>/` must never be edited
-after it is pushed.
+`new_version.py`, not by hand, and that script also rewrites any bare
+version token in this file, so write `vN` here rather than a real version
+number; and `data/<version>/` must never be edited after it is pushed.
 
 The R package needs a library the session can write to: `R_LIBS_USER` set
 to a directory under the scratchpad, as the script does. CRAN is not
@@ -175,7 +181,7 @@ PyPI. The full set itself stays in the work dir and is never committed.
 ## Tests
 
 ```sh
-cd generator/fakehosp && Rscript -e 'testthat::test_dir("tests/testthat")'
+cd generator/fakehosp && Rscript -e 'library(fakehosp); testthat::test_dir("tests/testthat")'
 ```
 
 The suite checks determinism (same seed, identical output), fake NHS

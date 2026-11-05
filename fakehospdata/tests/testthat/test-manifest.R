@@ -7,7 +7,7 @@ test_that("fh_tables lists both scales with schema and name", {
   expect_equal(s$name[s$table == "answers/truth/spells"], "truth_spells")
   expect_true(f$n_files[f$table == "layer1/pas_adt_events"] > 1)
   expect_equal(f$rows[f$table == "layer1/pas_patients"], 805246)
-  expect_true(all(startsWith(unlist(f$paths), "v2/full/")))
+  expect_true(all(startsWith(unlist(f$paths), "v3/full/")))
 })
 
 test_that("fh_download skips files already in the cache and rejects unknown tables", {

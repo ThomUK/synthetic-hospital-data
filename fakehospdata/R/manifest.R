@@ -12,14 +12,14 @@
 #' manifest, which is the one that describes the assets. `source = "release"`
 #' reads that copy; [fh_download()] uses it for the full set.
 #'
-#' @param version Dataset version, such as `"v2"`.
+#' @param version Dataset version, such as `"v3"`.
 #' @param cache Cache directory, see [fh_cache_dir()].
 #' @param refresh Download again even if cached?
 #' @param source `"pages"` (the committed manifest) or `"release"` (the
 #'   manifest attached to the release of this version).
 #' @return The parsed manifest as a list.
 #' @export
-fh_manifest <- function(version = "v2", cache = fh_cache_dir(), refresh = FALSE, source = c("pages", "release")) {
+fh_manifest <- function(version = "v3", cache = fh_cache_dir(), refresh = FALSE, source = c("pages", "release")) {
   source <- match.arg(source)
   dest <- file.path(cache, version, if (source == "pages") "manifest.json" else "manifest-release.json")
   if (refresh || !file.exists(dest)) {
@@ -56,7 +56,7 @@ scale_manifest <- function(scale, version, cache) {
 #' fh_tables("sample")
 #' }
 #' @export
-fh_tables <- function(scale = c("sample", "full"), version = "v2", cache = fh_cache_dir(), manifest = NULL) {
+fh_tables <- function(scale = c("sample", "full"), version = "v3", cache = fh_cache_dir(), manifest = NULL) {
   scale <- match.arg(scale)
   m <- manifest %||% scale_manifest(scale, version, cache)
   entries <- m[[scale]]

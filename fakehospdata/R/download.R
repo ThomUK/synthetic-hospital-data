@@ -18,7 +18,7 @@
 #' fh_download("full", tables = c("derived/spells", "derived/patients"))
 #' }
 #' @export
-fh_download <- function(scale = c("sample", "full"), version = "v2", tables = NULL,
+fh_download <- function(scale = c("sample", "full"), version = "v3", tables = NULL,
                         cache = fh_cache_dir(), quiet = FALSE) {
   scale <- match.arg(scale)
   m <- scale_manifest(scale, version, cache)

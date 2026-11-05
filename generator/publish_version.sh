@@ -49,7 +49,7 @@ cat <<MSG
 Staged. Full set is in $work/build/$version/full (not committed; the release
 workflow rebuilds it on a runner). Next, by hand:
   1. review: git status; git diff -- pending-changes.json data/README.md
-  2. R tests: (cd generator/fakehosp && R_LIBS_USER=$R_LIBS_USER Rscript -e 'testthat::test_dir("tests/testthat")')
+  2. R tests: (cd generator/fakehosp && R_LIBS_USER=$R_LIBS_USER Rscript -e 'library(fakehosp); testthat::test_dir("tests/testthat")')
   3. commit as Claude and push main (the Pages workflow deploys the site)
   4. run the "Dataset release" workflow with version=$version (Actions tab, or
      gh workflow run release.yml -f version=$version); it rebuilds from the seed,
