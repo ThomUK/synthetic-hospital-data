@@ -103,19 +103,74 @@ published dataset; every page shows it through the one shared module
 `../banner.js`, so the notice cannot differ between pages. Add a line there with every change to the generator, and empty the
 list when the next version is built and published.
 
-## Publishing
+## Publishing a new version
 
-The 5% sample is committed under `data/<version>/` with `manifest.json`.
-The full set goes to a GitHub release through the
-`Synthetic hospital dataset release` workflow
-(`.github/workflows/synthetic-hospital-release.yml`, run by hand from the
-Actions tab with the version as input). The runner installs the same
-toolchain, regenerates layer 1 from the seed, builds, runs
-`check_manifest.py` against the committed manifest (every row count must
-match, checksums are reported) and uploads one asset per Parquet file with
-`publish_release.sh`. A cloud session's token cannot create releases, which
-is why the runner does it; the same script works locally with a personal
-token.
+Everything below has been done for v1, v2 and v3 from a cloud session; it
+is the procedure, with timings, for the next one. The published sample
+lives in the repository under `data/<version>/`; the full set is attached
+to a GitHub release by the `Dataset release` workflow, which a session
+cannot do itself (its token may not create releases), so the runner
+rebuilds the data from the seed and uploads it.
+
+1. **Decide the version.** A published version is immutable, so a
+   regenerated dataset is the next `vN`. `pending-changes.json` lists what
+   the generator has changed since the last build; that list becomes the
+   new version's row in the table in `data/README.md`.
+2. **Run the pipeline** from the repository root:
+   `generator/publish_version.sh v3 /some/work/dir`. It installs the R
+   package into a private library, generates layer 1 at full scale
+   (about 9 minutes, 12 GB of RAM, 4.6 GB of CSV in the work dir), builds
+   the Parquet, derived and aggregate layers, the 5% sample, the previews
+   and `erd.json` (about 2 minutes), copies the sample set into
+   `data/v3/`, removes `data/v2/`, runs `new_version.py v3` to point
+   every path, default and the reader package at v3, and runs the JS
+   tests. Run it in the background with the log in a file: it takes about
+   12 minutes. Do not run anything else heavy alongside it; the generator
+   peaks at 12 GB on a 15 GB machine.
+3. **Check the result.** `git status` should show `data/v3/` added,
+   `data/v2/` deleted, and small edits to the files that name the version
+   (`index.html`, `viewer/app.js`, `erd/app.js`, `README.md`,
+   `data/README.md`, `CLAUDE.md`, `.github/workflows/release.yml`,
+   `generator/build.py`, the `fakehospdata` defaults and tests,
+   `pending-changes.json` now empty for v3). Then run the R tests:
+   `cd generator/fakehosp && R_LIBS_USER=<work>/rlib Rscript -e 'testthat::test_dir("tests/testthat")'`
+   (about 5 minutes). The reader package's tests (`testthat::test_local(".")`
+   in `fakehospdata/`) need the `duckdb` R package, which the cloud
+   container cannot install (no CRAN access, not in the Ubuntu archive), so
+   run those locally; `new_version.py` has already pointed their fixtures
+   at the new version.
+4. **Commit and push** as `Claude <noreply@anthropic.com>` to `main`. The
+   Pages workflow deploys the site with the new data within two minutes;
+   `banner.js` stops showing the out-of-sync notice because the pending
+   list is empty.
+5. **Release the full set.** Run the `Dataset release` workflow
+   (`.github/workflows/release.yml`) with `version=v3`: from the Actions
+   tab, or `gh workflow run release.yml -f version=v3`, or the GitHub MCP
+   `actions_run_trigger` tool. The runner installs the same toolchain,
+   regenerates from the seed, builds, runs `check_manifest.py` against the
+   committed `data/v3/manifest.json` (every row count must match or the
+   job fails; checksums are reported only, because Parquet bytes differ
+   between machines) and uploads one asset per Parquet file with
+   `publish_release.sh`, plus the rebuilt manifest. About 10 minutes.
+6. **Verify**: the release page lists 77 assets of about 1 GB; download
+   one asset and query it; the project page, viewer and ERD page load the
+   new version.
+
+Things that have gone wrong before, so you do not repeat them: the
+runner's R library is read-only without `sudo` (the workflow has it); the
+Pages site had to be enabled once in the repository settings before the
+deploy workflow could run; a full run that fails late is usually a mess
+step tripping on an edge case the small test runs never hit (the first v2
+run failed on an unparseable date), so read the tail of `run.log`; the
+Python build's default `--version` and every page path are updated by
+`new_version.py`, not by hand; and `data/<version>/` must never be edited
+after it is pushed.
+
+The R package needs a library the session can write to: `R_LIBS_USER` set
+to a directory under the scratchpad, as the script does. CRAN is not
+reachable from the cloud container; the R dependencies come from the
+Ubuntu archive (`r-cran-*`, see `setup-cloud.sh`) and Python DuckDB from
+PyPI. The full set itself stays in the work dir and is never committed.
 
 ## Tests
 
@@ -151,7 +206,9 @@ CSV writer.
 | `check_manifest.py` | compares a rebuilt manifest with the committed one |
 | `preview.py` | 100-row JSON previews of every sample table for the table viewer; run by `build.py` |
 | `erd.py` | `erd.json` for the ERD page: columns from the Parquet, links inferred by name and measured against the data, lineage parsed from `sql/`; run by `build.py` |
-| `publish_release.sh` | attaches the full set to a GitHub release |
+| `publish_release.sh` | attaches the full set to a GitHub release; run by the release workflow |
+| `publish_version.sh` | the whole session-side pipeline for a new version: install, generate, build, stage `data/vN`, bump, test |
+| `new_version.py` | points every version reference at the new version and rolls `pending-changes.json` into the version table |
 | `setup-cloud.sh` | toolchain install for cloud sessions |
 
 ## Toolchain note

@@ -27,4 +27,8 @@ to GitHub Pages from `main`.
   and `cd fakehospdata && Rscript -e 'testthat::test_local(".")'` (the reader
   package; its tests seed a cache from `data/v2/sample`, so they run offline).
 - Full-set releases come from the `release` workflow (Actions tab, run by
-  hand with the version as input), never from a session. See `generator/README.md`.
+  hand with the version as input), never from a session.
+- **Publishing a new data version** is `generator/publish_version.sh vN`
+  then commit, push and run the release workflow; the step-by-step
+  procedure with timings and past pitfalls is in `generator/README.md`
+  under "Publishing a new version". Read it before building.
